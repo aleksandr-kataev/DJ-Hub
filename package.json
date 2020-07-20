@@ -1,0 +1,24 @@
+{
+  "name": "dj-hub",
+  "version": "1.0.0",
+  "description": "Social network for DJs to share their mixes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sashagebert/DJ-Hub.git"
+  },
+  "keywords": [
+    "React",
+    "Node",
+    "Heroku"
+  ],
+  "author": "Aleksandr Kataev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sashagebert/DJ-Hub/issues"
+  },
+  "homepage": "https://github.com/sashagebert/DJ-Hub#readme"
+}
