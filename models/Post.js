@@ -34,6 +34,7 @@ const PostSchema = new Schema({
   link: {
     type: String,
     required: true,
+    unique: true,
   },
   tag: {
     type: String,

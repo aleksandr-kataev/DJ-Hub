@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/sashagebert/DJ-Hub#readme",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "concurrently": "^5.2.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
