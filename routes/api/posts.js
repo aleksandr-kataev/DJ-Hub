@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../../middleware/auth');
 
 //Post model
 const Post = require('../../models/Post');
@@ -17,10 +18,10 @@ const postController = async (req, res) => {
   const { title, authorID, link, tag } = req.body;
   try {
     const newPost = new Post({
-      title: title,
-      author: authorID,
-      link: link,
-      tag: tag,
+      title,
+      authorID,
+      link,
+      tag,
     });
     const response = await newPost.save();
     res.json({ response, added: true });
@@ -49,12 +50,12 @@ router.get('/', getController);
 
 // @route   POST api/posts
 // @desc    Add new post
-// @access  Public
-router.post('/', postController);
+// @access  Private
+router.post('/', auth, postController);
 
 // @route   DELETE api/posts/:id
 // @desc    Add new post
-// @access  Public
-router.delete('/:id', deleteController);
+// @access  Private
+router.delete('/:id', auth, deleteController);
 
 module.exports = router;
