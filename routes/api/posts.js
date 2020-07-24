@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 
-//Post model
+//Models
 const Post = require('../../models/Post');
+const User = require('../../models/User');
 
 const getController = async (req, res) => {
   try {
@@ -15,11 +16,11 @@ const getController = async (req, res) => {
 };
 
 const postController = async (req, res) => {
-  const { title, authorID, link, tag } = req.body;
+  const { title, username, link, tag } = req.body;
   try {
     const newPost = new Post({
       title,
-      authorID,
+      username,
       link,
       tag,
     });
@@ -32,7 +33,7 @@ const postController = async (req, res) => {
 
 const deleteController = async (req, res) => {
   try {
-    const removed = await Post.findByIdAndRemove(req.params.id);
+    const removed = await Post.findByIdAndRemove(req.params.postId);
     //check if the record exists
     if (!removed) {
       throw Error('Record not found');
@@ -40,6 +41,43 @@ const deleteController = async (req, res) => {
     res.status(200).json({ deleted: true, rtn: removed });
   } catch (err) {
     res.status(400).json({ msg: err.message, deleted: false });
+  }
+};
+
+const patchController = async (req, res) => {
+  try {
+    if (req.body.type == 'like') {
+      const post = await Post.findByIdAndUpdate(req.params.postId, {
+        $set: { numOfLikes: numOfLikes + 1 },
+      });
+      if (post === null) {
+        throw Error('Record not found');
+      }
+      const user = await User.findByIdAndUpdate(req.params.postId, {
+        $push: {
+          likedPosts: req.params.postId,
+        },
+      });
+      if (user === null) {
+        throw Error('User not found');
+      }
+    } else if (req.body.type == 'comment') {
+      const post = await Post.findByIdAndUpdate(req.params.postId, {
+        $push: {
+          comments: {
+            comment: req.body.comment,
+            user: req.body.username,
+            date: Date.now,
+          },
+        },
+      });
+      if (post === null) {
+        throw Error('Record not found');
+      }
+    }
+    res.status(200).json({ modified: true });
+  } catch (err) {
+    res.status(400).json({ msg: err.message, modified: false });
   }
 };
 
@@ -54,8 +92,13 @@ router.get('/', getController);
 router.post('/', auth, postController);
 
 // @route   DELETE api/posts/:id
-// @desc    Add new post
+// @desc    Delete post
 // @access  Private
 router.delete('/:id', auth, deleteController);
+
+// @route   PATCH api/posts/:id
+// @desc    Like or comment on the post
+// @access  Private
+router.patch('/:id', auth, patchController);
 
 module.exports = router;

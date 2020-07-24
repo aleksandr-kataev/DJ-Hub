@@ -11,8 +11,8 @@ const PostSchema = new Schema({
     default: Date.now,
     required: true,
   },
-  author: {
-    //user ID
+  user: {
+    //username
     type: String,
     required: true,
   },

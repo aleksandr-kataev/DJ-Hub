@@ -7,6 +7,7 @@ const auth = require('../../middleware/auth');
 
 //User model
 const User = require('../../models/User');
+const Post = require('../../models/Post');
 
 const regController = async (req, res) => {
   const { username, email, password } = req.body;
@@ -156,6 +157,24 @@ const dataController = async (req, res) => {
   }
 };
 
+const postsDataController = async (req, res) => {
+  try {
+    const posts = await Post.find({ username: req.body.username });
+    if (!posts)
+      throw {
+        err: '.find_failed',
+        errDescription: 'Was not able to retrieve posts',
+        error: new Error(),
+      };
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json({
+      error: err.err,
+      errorDescription: err.errDescription,
+    });
+  }
+};
+
 // @route   POST api/users
 // @desc    Register new user
 // @access  Public
@@ -167,8 +186,13 @@ router.post('/', regController);
 router.post('/', authController);
 
 // @route   GET api/auth/user
-// @desc    AGet user data
+// @desc    Get user data
 // @access  Private
 router.get('/user', auth, dataController);
+
+// @route   GET api/auth/user/posts
+// @desc    Get user posts
+// @access  Private
+router.get('/user/posts', auth, postsDataController);
 
 module.exports = router;

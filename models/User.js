@@ -16,6 +16,16 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  region: {
+    type: String,
+  },
+  bio: {
+    type: String,
+  },
+  likedPosts: {
+    type: Array,
+    default: [],
+  },
 });
 
 module.exports = User = mongoose.model('user', UserSchema);
