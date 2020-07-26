@@ -1,33 +1,19 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const DB_CONN = require('./config').DB_CONN;
+const dbHandler = require('./db_handler');
 
 const app = express();
 
-//MiddleWare
+// MiddleWare
 app.use(express.json());
 
-//DB con
-const dbOptions = {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-};
+if (process.env.NODE_ENV === 'test') {
+  dbHandler.testConnect();
+} else {
+  dbHandler.devConnect();
+}
 
-const dbConnect = async () => {
-  try {
-    await mongoose.connect(DB_CONN, dbOptions);
-    console.log('DB connected');
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-dbConnect();
-
-//Routes
+// Routes
 app.use('/api/posts', require('./routes/api/posts'));
-app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/authZ', require('./routes/api/authZ'));
 
 module.exports = app;

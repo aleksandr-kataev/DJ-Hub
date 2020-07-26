@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
+const uuid = require('uuid');
+
+const { Schema } = mongoose;
 
 const PostSchema = new Schema({
+  id: {
+    type: String,
+    required: true,
+    default: uuid.v4(),
+  },
   title: {
     type: String,
     required: true,
@@ -9,27 +16,23 @@ const PostSchema = new Schema({
   date: {
     type: Date,
     default: Date.now,
-    required: true,
   },
   user: {
-    //username
+    // user id
     type: String,
     required: true,
   },
   numOfLikes: {
     type: Number,
     default: 0,
-    required: true,
   },
   numOfComments: {
     type: Number,
     default: 0,
-    required: true,
   },
   comments: {
     type: Array,
     default: [],
-    required: true,
   },
   link: {
     type: String,
@@ -42,4 +45,6 @@ const PostSchema = new Schema({
   },
 });
 
-module.exports = Post = mongoose.model('post', PostSchema);
+const Post = mongoose.model('post', PostSchema);
+
+module.exports = Post;
