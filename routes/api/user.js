@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 
 const { HTTPError } = require('../../util');
 const { JWT_SECRET } = require('../../config');
-const authN = require('../../middleware/authN');
+const auth = require('../../middleware/auth');
 
 const router = express.Router();
 
@@ -71,7 +71,7 @@ const regController = async (req, res) => {
   }
 };
 
-const authZController = async (req, res) => {
+const loginController = async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -88,7 +88,7 @@ const authZController = async (req, res) => {
       throw new HTTPError('invalid pass', 400);
     }
 
-    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: 3600 });
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: 3600 });
     if (!token) {
       throw new HTTPError('jwt_token_failed', 500);
     }
@@ -97,7 +97,7 @@ const authZController = async (req, res) => {
       signedIn: true,
       token,
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
       },
@@ -129,24 +129,24 @@ const postsDataController = async (req, res) => {
   }
 };
 
-// @route   POST api/users
+// @route   POST api/user/register
 // @desc    Register new user
 // @access  Public
-router.post('/', regController);
+router.post('/register', regController);
 
-// @route   POST api/users
-// @desc    Authorize  user
+// @route   POST api/user/login
+// @desc    Authorize user
 // @access  Public
-router.post('/', authZController);
+router.post('/login', loginController);
 
-// @route   GET api/auth/user
+// @route   GET api/user/:id
 // @desc    Get user data
 // @access  Private
-router.get('/user', authN, dataController);
+router.get('/:id', auth, dataController);
 
-// @route   GET api/auth/user/posts
+// @route   GET api/user/:id/posts
 // @desc    Get user posts
 // @access  Private
-router.get('/user/posts', authN, postsDataController);
+router.get('/:id/posts', auth, postsDataController);
 
 module.exports = router;

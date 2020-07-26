@@ -1,7 +1,7 @@
 const express = require('express');
 
 const router = express.Router();
-const auth = require('../../middleware/authN');
+const auth = require('../../middleware/auth');
 
 // Models
 const Post = require('../../models/Post');
@@ -18,11 +18,11 @@ const getController = async (req, res) => {
 };
 
 const postController = async (req, res) => {
-  const { title, username, link, tag } = req.body;
+  const { title, userID, link, tag } = req.body;
   try {
     const newPost = new Post({
       title,
-      username,
+      userID,
       link,
       tag,
     });
@@ -109,6 +109,6 @@ router.delete('/', auth, deleteController);
 // @route   PATCH api/posts/
 // @desc    Like or comment on the post
 // @access  Private
-router.patch('/', patchController);
+router.patch('/', auth, patchController);
 
 module.exports = router;

@@ -14,6 +14,6 @@ if (process.env.NODE_ENV === 'test') {
 
 // Routes
 app.use('/api/posts', require('./routes/api/posts'));
-app.use('/api/authZ', require('./routes/api/authZ'));
+app.use('/api/user', require('./routes/api/user'));
 
 module.exports = app;
