@@ -23,6 +23,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  posts: {
+    type: Array,
+    default: [],
+  },
   region: {
     type: String,
   },

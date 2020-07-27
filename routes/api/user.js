@@ -10,11 +10,10 @@ const router = express.Router();
 
 // User model
 const User = require('../../models/User');
-const Post = require('../../models/Post');
 
 const regController = async (req, res) => {
+  const { username, email, password } = req.body;
   try {
-    const { username, email, password } = req.body;
     if (!username || !email || !password) {
       throw new HTTPError('Not all fields have been entered', 400);
     }
@@ -61,7 +60,7 @@ const regController = async (req, res) => {
     res.status(200).json({
       token,
       newUser: {
-        id: savedUser.id,
+        userId: savedUser.id,
         username: savedUser.username,
         email: savedUser.email,
       },
@@ -72,8 +71,8 @@ const regController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
+  const { email, password } = req.body;
   try {
-    const { email, password } = req.body;
     if (!email || !password) {
       throw new HTTPError('empty_fields', 400);
     }
@@ -119,16 +118,6 @@ const dataController = async (req, res) => {
   }
 };
 
-const postsDataController = async (req, res) => {
-  try {
-    const posts = await Post.findOne({ username: req.body.username });
-    if (!posts) throw Error('.find_failed');
-    res.status(200).json(posts);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
 // @route   POST api/user/register
 // @desc    Register new user
 // @access  Public
@@ -143,10 +132,5 @@ router.post('/login', loginController);
 // @desc    Get user data
 // @access  Private
 router.get('/:id', auth, dataController);
-
-// @route   GET api/user/:id/posts
-// @desc    Get user posts
-// @access  Private
-router.get('/:id/posts', auth, postsDataController);
 
 module.exports = router;

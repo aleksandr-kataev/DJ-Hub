@@ -10,16 +10,3 @@ describe('Get Endpoint', () => {
     expect(res.statusCode).toEqual(200);
   });
 });
-
-// describe('POST Endpoint', () => {
-//   it('Should post a post', async () => {
-//     const res = await request(app).post('/api/posts').send({
-//       title: '1k mix',
-//       username: 'bou',
-//       link: 'www.soundcloud/bou.com',
-//       tag: 'dnb',
-//     });
-//     expect(res.statusCode).toEqual(200);
-//     expect(res.body).toHaveProperty('post');
-//   });
-// });

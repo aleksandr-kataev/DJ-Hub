@@ -28,6 +28,16 @@ const postController = async (req, res) => {
     });
     const response = await newPost.save();
     if (!response) throw Error('.save()_failed');
+    const user = await User.findOneAndUpdate(
+      { id: userID },
+      {
+        $push: {
+          posts: response.id,
+        },
+      },
+      { new: true },
+    );
+    if (!user) throw Error('Failed to update');
     res.status(200).json({ response, added: true });
   } catch (err) {
     res.status(500).json(err);
@@ -53,8 +63,9 @@ const patchController = async (req, res) => {
       const post = await Post.findOneAndUpdate(
         { id: req.body.postID },
         { $inc: { numofLikes: 1 } },
+        { new: true },
       );
-      if (post === null) {
+      if (!post) {
         throw Error(post);
       }
       const user = await User.findOneAndUpdate(
@@ -64,8 +75,9 @@ const patchController = async (req, res) => {
             likedPosts: req.params.postId,
           },
         },
+        { new: true },
       );
-      if (user === null) {
+      if (!user) {
         throw Error('User not found');
       }
     } else if (req.body.type === 'comment') {
@@ -80,8 +92,9 @@ const patchController = async (req, res) => {
             },
           },
         },
+        { new: true },
       );
-      if (post === null) {
+      if (!post) {
         throw Error('Record not found');
       }
     }

@@ -28,6 +28,7 @@ module.exports.testConnect = async () => {
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 1000,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   };
 
   await mongoose.connect(uri, dbOptions);
