@@ -41,7 +41,7 @@ const regController = async (req, res) => {
     const newUser = new User({
       username,
       email,
-      password,
+      password: hash,
     });
 
     const savedUser = await newUser.save();
@@ -71,20 +71,20 @@ const regController = async (req, res) => {
 };
 
 const loginController = async (req, res) => {
-  const { email, password } = req.body;
+  const { username, password } = req.body;
   try {
-    if (!email || !password) {
+    if (!username || !password) {
       throw new HTTPError('empty_fields', 400);
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ username });
     if (!user) {
-      throw new HTTPError('email_not_found', 400);
+      throw new HTTPError('username_not_found', 400);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      throw new HTTPError('invalid pass', 400);
+      throw new HTTPError('invalid_pass', 400);
     }
 
     const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: 3600 });
@@ -97,7 +97,7 @@ const loginController = async (req, res) => {
       token,
       user: {
         id: user.id,
-        name: user.name,
+        name: user.username,
         email: user.email,
       },
     });
@@ -108,7 +108,7 @@ const loginController = async (req, res) => {
 
 const dataController = async (req, res) => {
   try {
-    const user = await User.findOne({ id: req.body.userID }).select(
+    const user = await User.findOne({ username: req.params.username }).select(
       '-password',
     );
     if (!user) throw Error('user_does_not_exist');
@@ -128,9 +128,9 @@ router.post('/register', regController);
 // @access  Public
 router.post('/login', loginController);
 
-// @route   GET api/user/:id
+// @route   GET api/user/:username
 // @desc    Get user data
 // @access  Private
-router.get('/:id', auth, dataController);
+router.get('/:username', auth, dataController);
 
 module.exports = router;

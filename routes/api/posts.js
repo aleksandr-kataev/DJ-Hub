@@ -58,10 +58,11 @@ const deleteController = async (req, res) => {
 };
 
 const patchController = async (req, res) => {
+  const { type, userID, postID } = req.body;
   try {
-    if (req.body.type === 'like') {
+    if (type === 'like') {
       const post = await Post.findOneAndUpdate(
-        { id: req.body.postID },
+        { id: postID },
         { $inc: { numofLikes: 1 } },
         { new: true },
       );
@@ -69,10 +70,10 @@ const patchController = async (req, res) => {
         throw Error(post);
       }
       const user = await User.findOneAndUpdate(
-        { id: req.body.userID },
+        { id: userID },
         {
           $push: {
-            likedPosts: req.params.postId,
+            likedPosts: postID,
           },
         },
         { new: true },
@@ -80,14 +81,15 @@ const patchController = async (req, res) => {
       if (!user) {
         throw Error('User not found');
       }
-    } else if (req.body.type === 'comment') {
+    } else if (type === 'comment') {
+      const { comment } = req.body;
       const post = await Post.findOneAndUpdate(
-        { id: req.body.postID },
+        { id: postID },
         {
           $push: {
             comments: {
-              comment: req.body.comment,
-              user: req.body.username,
+              comment,
+              user: userID,
               date: Date.now,
             },
           },

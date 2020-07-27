@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('../app');
-const dbHandler = require('../db_handler');
+const app = require('../../app');
+const dbHandler = require('../../db_handler');
 
 afterAll(() => dbHandler.closeDatabase());
 
@@ -15,9 +15,9 @@ beforeAll((done) => {
       email: 'example@mail.com',
       password: '12345',
     })
-    .end((err, response) => {
-      userID = response.body.newUser.userId;
-      token = response.body.token;
+    .end((err, res) => {
+      userID = res.body.newUser.userId;
+      token = res.body.token;
       done();
     });
 });

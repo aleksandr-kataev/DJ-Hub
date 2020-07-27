@@ -30,9 +30,7 @@ module.exports.testConnect = async () => {
     useUnifiedTopology: true,
     useFindAndModify: false,
   };
-
   await mongoose.connect(uri, dbOptions);
-  console.log('Connected to test DB');
 };
 
 module.exports.closeDatabase = async () => {

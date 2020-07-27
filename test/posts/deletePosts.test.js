@@ -1,6 +1,6 @@
 const request = require('supertest');
-const app = require('../app');
-const dbHandler = require('../db_handler');
+const app = require('../../app');
+const dbHandler = require('../../db_handler');
 
 afterAll(() => dbHandler.closeDatabase());
 
@@ -16,9 +16,9 @@ beforeAll((done) => {
       email: 'example@mail.com',
       password: '12345',
     })
-    .end((regErr, regResponse) => {
-      token = regResponse.body.token;
-      userID = regResponse.body.newUser.userId;
+    .end((regErr, regRes) => {
+      token = regRes.body.token;
+      userID = regRes.body.newUser.userId;
       request(app)
         .post('/api/posts')
         .set({ 'x-auth-token': token })
@@ -28,8 +28,8 @@ beforeAll((done) => {
           link: 'test.com',
           tag: 'test',
         })
-        .end((postErr, postResponse) => {
-          postID = postResponse.body.response.id;
+        .end((postErr, postRes) => {
+          postID = postRes.body.response.id;
           done();
         });
     });
