@@ -27,7 +27,7 @@ const postController = async (req, res) => {
       tag,
     });
     const response = await newPost.save();
-    if (!response) throw Error('.save()_failed');
+    if (!response) throw Error('.save()_failed'); /// new HTTP ERROR
     const user = await User.findOneAndUpdate(
       { id: userID },
       {

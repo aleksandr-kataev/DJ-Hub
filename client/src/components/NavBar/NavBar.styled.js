@@ -3,7 +3,7 @@ import tw from 'tailwind.macro';
 
 const NavBarStyled = styled.nav.attrs({
   className:
-    'flex items-center justify-between bg-black',
+    'flex items-center justify-between relative bg-black z-30',
 })``;
 
 const LeftContainer = styled.div.attrs({

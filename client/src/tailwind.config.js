@@ -10,6 +10,7 @@ module.exports = {
       logoL: '70px',
       logoS: '40px',
       menu: '20px',
+      sideMenu: '40px',
     },
   },
   variants: {},
