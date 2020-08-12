@@ -1,59 +1,66 @@
 import React from 'react';
 import { bool } from 'prop-types';
 import { Link } from 'react-router-dom';
-import StyledMenu from './Menu.styled';
+import MenuStyles from './MenuStyles';
 
-const Menu = ({ menu, isLoggedIn }) => (
-  <StyledMenu
-    className={
-      menu
-        ? 'transform translate-x-0 duration-500 ease-in-out'
-        : 'transform translate-x-full duration-500 ease-in-out'
-    }
-  >
-    {isLoggedIn ? (
-      <>
-        <ul>
-          <li>
-            <Link to='/'>Discover</Link>
-          </li>
-          <li>
-            <button type='button'>LogIn</button>
-          </li>
-          <li>
-            <button type='button'>Join</button>
-          </li>
-          <li>
-            <Link to='/about'>about</Link>
-          </li>
-        </ul>
-      </>
-    ) : (
-      <>
-        <ul>
-          <li>
-            <Link to='/'>Discover</Link>
-          </li>
-          <li>
-            <Link to='/profile'>My profile</Link>
-          </li>
-          <li>
-            <Link to='/post'>Post</Link>
-          </li>
-          <li>
-            <button type='button'>LogOut</button>
-          </li>
-          <li>
-            <Link to='/about'>About</Link>
-          </li>
-        </ul>
-      </>
-    )}
-  </StyledMenu>
-);
+const Menu = ({ menuOpened, isLoggedIn }) => {
+  const {
+    menu,
+    closedMenu,
+    openedMenu,
+    ul,
+    li,
+  } = MenuStyles;
+  return (
+    <div
+      className={`${menu} ${
+        menuOpened ? openedMenu : closedMenu
+      }`}
+    >
+      {isLoggedIn ? (
+        <>
+          <ul className={ul}>
+            <li className={li}>
+              <Link to='/'>Discover</Link>
+            </li>
+            <li className={li}>
+              <button type='button'>LogIn</button>
+            </li>
+            <li className={li}>
+              <button type='button'>Join</button>
+            </li>
+            <li className={li}>
+              <Link to='/about'>about</Link>
+            </li>
+          </ul>
+        </>
+      ) : (
+        <>
+          <ul className={ul}>
+            <li className={li}>
+              <Link to='/'>DISCOVER</Link>
+            </li>
+            <li className={li}>
+              <Link to='/profile'>MY PROFILE</Link>
+            </li>
+            <li className={li}>
+              <Link to='/post'>POST</Link>
+            </li>
+            <li className={li}>
+              <button type='button'>LOGOUT</button>
+            </li>
+            <li className={li}>
+              <Link to='/about'>ABOUT</Link>
+            </li>
+          </ul>
+        </>
+      )}
+    </div>
+  );
+};
 
 Menu.propTypes = {
-  menu: bool.isRequired,
+  menuOpened: bool.isRequired,
   isLoggedIn: bool.isRequired,
 };
 

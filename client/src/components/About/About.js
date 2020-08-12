@@ -1,6 +1,8 @@
 import React from 'react';
-import AboutStyled from './About.styled';
+import AboutStyles from './AboutStyles';
 
-const About = () => <AboutStyled>About</AboutStyled>;
+const About = () => (
+  <div className={AboutStyles}>Home</div>
+);
 
 export default About;

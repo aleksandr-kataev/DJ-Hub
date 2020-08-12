@@ -1,6 +1,8 @@
 import React from 'react';
-import HomeStyled from './Home.styled';
+import HomeStyles from './HomeStyles';
 
-const Home = () => <HomeStyled>Home</HomeStyled>;
+const Home = () => (
+  <div className={HomeStyles}>Home</div>
+);
 
 export default Home;
