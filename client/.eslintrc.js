@@ -18,12 +18,35 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'operator-linebreak': [
+      'error',
+      'after',
+      {
+        overrides: {
+          ':': 'before',
+        },
+      },
+    ],
+    'no-unused-vars': [
+      'error',
+      {
+        vars: 'all',
+        args: 'after-used',
+        ignoreRestSiblings: false,
+      },
+    ],
+    'import/no-extraneous-dependencies': [
+      'error',
+      { devDependencies: true },
+    ],
     'linebreak-style': 0,
     'global-require': 0,
     'eslint linebreak-style': [0, 'error', 'windows'],
     'jsx-quotes': [2, 'prefer-single'],
-    'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
+    'react/jsx-filename-extension': [
+      1,
+      { extensions: ['.js', '.jsx'] },
+    ],
     'object-curly-newline': [
       2,
       {
