@@ -1,14 +1,10 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
+import tokenConfig from './tokenConfig';
 import {
   USER_LOADED,
   USER_LOADING,
   AUTH_ERROR,
-  LOGIN_SUCCESS,
-  LOGIN_FAIL,
-  LOGOUT_SUCCESS,
-  REGISTER_SUCCESS,
-  REGISTER_FAIL,
 } from './types';
 
 // check token && load user
@@ -16,21 +12,13 @@ const loadUser = () => async (dispach, getState) => {
   // User loading
   dispach({ type: USER_LOADING });
 
-  // Get tokena from locaStorage
-  const { token } = getState().auth;
-
-  const config = {
-    headers: {
-      'Context-type': 'application/json',
-    },
-  };
-
-  if (token) {
-    config.headers['x-auth-token'] = token;
-  }
-
   try {
-    const res = await axios.get('api/user', config);
+    const res = await axios.get(
+      // dev http://localhost:5000/api/user
+      // build api/dev
+      'http://localhost:5000/api/user',
+      tokenConfig(getState),
+    );
     if (!res) throw new Error();
     dispach({
       type: USER_LOADED,
@@ -44,4 +32,5 @@ const loadUser = () => async (dispach, getState) => {
   }
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export { loadUser };

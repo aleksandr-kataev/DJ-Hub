@@ -15,10 +15,15 @@ const regController = async (req, res) => {
   const { username, email, password } = req.body;
   try {
     if (!username || !email || !password) {
-      throw new HTTPError('Not all fields have been entered', 400);
+      throw new HTTPError(
+        'Not all fields have been entered',
+        400,
+      );
     }
 
-    const existingUsername = await User.findOne({ username });
+    const existingUsername = await User.findOne({
+      username,
+    });
     if (existingUsername) {
       throw new HTTPError('username_taken', 400);
     }
@@ -49,9 +54,13 @@ const regController = async (req, res) => {
       throw new HTTPError('.save()_failed', 500);
     }
 
-    const token = jwt.sign({ id: savedUser._id }, JWT_SECRET, {
-      expiresIn: 3600,
-    });
+    const token = jwt.sign(
+      { id: savedUser._id },
+      JWT_SECRET,
+      {
+        expiresIn: 3600,
+      },
+    );
 
     if (!token) {
       throw new HTTPError('jwt.sign_failed', 500);
@@ -66,7 +75,9 @@ const regController = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(err.code).json({ err: err.message, registered: false });
+    res
+      .status(err.code)
+      .json({ err: err.message, registered: false });
   }
 };
 
@@ -82,12 +93,17 @@ const loginController = async (req, res) => {
       throw new HTTPError('username_not_found', 400);
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(
+      password,
+      user.password,
+    );
     if (!isMatch) {
       throw new HTTPError('invalid_pass', 400);
     }
 
-    const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: 3600 });
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+      expiresIn: 3600,
+    });
     if (!token) {
       throw new HTTPError('jwt_token_failed', 500);
     }
@@ -102,15 +118,17 @@ const loginController = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(err.code).json({ err: err.message, signedIn: false });
+    res
+      .status(err.code)
+      .json({ err: err.message, signedIn: false });
   }
 };
 
 const dataController = async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.params.username }).select(
-      '-password',
-    );
+    const user = await User.findOne({
+      username: req.user.username,
+    }).select('-password');
     if (!user) throw Error('user_does_not_exist');
     res.json(user);
   } catch (err) {
@@ -128,9 +146,9 @@ router.post('/register', regController);
 // @access  Public
 router.post('/login', loginController);
 
-// @route   GET api/user/:username
+// @route   GET api/user
 // @desc    Get user data
 // @access  Private
-router.get('/:username', auth, dataController);
+router.get('/', auth, dataController);
 
 module.exports = router;

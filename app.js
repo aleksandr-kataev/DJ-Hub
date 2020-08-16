@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const cors = require('cors');
 const dbHandler = require('./db_handler');
 
 const publicPath = path.join(__dirname, './client/build');
@@ -7,6 +8,7 @@ const publicPath = path.join(__dirname, './client/build');
 const app = express();
 
 // MiddleWare
+app.use(cors());
 app.use(express.json());
 
 if (process.env.NODE_ENV === 'test') {
