@@ -1,11 +1,7 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
 import tokenConfig from './tokenConfig';
-import {
-  USER_LOADED,
-  USER_LOADING,
-  AUTH_ERROR,
-} from './types';
+import { USER_LOADED, USER_LOADING, AUTH_ERROR } from './types';
 
 // check token && load user
 const loadUser = () => async (dispach, getState) => {
@@ -25,12 +21,14 @@ const loadUser = () => async (dispach, getState) => {
       payload: res.data,
     });
   } catch (e) {
-    dispach(
-      returnErrors(e.response.data, e.response.status),
-    );
+    dispach(returnErrors(e.response.data, e.response.status));
     dispach({ type: AUTH_ERROR });
   }
 };
 
+const register = () => 0;
+
+const login = () => 0;
+
 // eslint-disable-next-line import/prefer-default-export
-export { loadUser };
+export { loadUser, register, login };

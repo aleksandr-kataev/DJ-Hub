@@ -23,10 +23,7 @@ const NavBar = () => {
           </button>
         </div>
       </nav>
-      <Menu
-        menuOpened={menuOpened}
-        isLoggedIn={isLoggedIn}
-      />
+      <Menu menuOpened={menuOpened} isLoggedIn={isLoggedIn} />
     </>
   );
 };
