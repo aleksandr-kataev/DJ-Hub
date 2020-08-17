@@ -55,7 +55,7 @@ const regController = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: savedUser._id },
+      { id: savedUser.id },
       JWT_SECRET,
       {
         expiresIn: 3600,
@@ -127,7 +127,7 @@ const loginController = async (req, res) => {
 const dataController = async (req, res) => {
   try {
     const user = await User.findOne({
-      username: req.user.username,
+      id: req.user.id,
     }).select('-password');
     if (!user) throw Error('user_does_not_exist');
     res.json(user);

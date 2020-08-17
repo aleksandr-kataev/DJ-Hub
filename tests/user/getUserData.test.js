@@ -3,7 +3,6 @@ const app = require('../../app');
 const dbHandler = require('../../db_handler');
 
 let token;
-let usernamePar;
 
 afterAll(() => dbHandler.closeDatabase());
 
@@ -17,28 +16,19 @@ beforeAll((done) => {
     })
     .end((err, res) => {
       token = res.body.token;
-      usernamePar = res.body.newUser.username;
       done();
     });
 });
 
-xdescribe('/GET User data', () => {
+describe('/GET User data', () => {
   it('Should get user data and return a 200', async () => {
     const res = await request(app)
-      .get(`/api/user/${usernamePar}`)
+      .get('/api/user')
       .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(200);
   });
-  it('Should not find a user and return a 400', async () => {
-    const res = await request(app)
-      .get('/api/user/wrongUserName')
-      .set({ 'x-auth-token': token });
-    expect(res.statusCode).toEqual(400);
-  });
   it('Should not authorize the user', async () => {
-    const res = await request(app).get(
-      `/api/user/${usernamePar}`,
-    );
+    const res = await request(app).get('/api/user');
     expect(res.statusCode).toEqual(401);
   });
 });
