@@ -27,6 +27,10 @@ module.exports = {
       logoS: '35px',
       menu: '20px',
       sideMenu: '25px',
+      modalHeader: '28px',
+      modalPlaceholder: '24px',
+      modalAction: '24px',
+      modalLabel: '24px',
     },
     opacity: {
       0: '0',

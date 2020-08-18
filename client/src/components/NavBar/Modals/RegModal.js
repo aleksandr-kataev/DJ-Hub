@@ -25,35 +25,48 @@ const RegModal = ({ show, setRegModalShow }) => {
   return (
     <div>
       <div>
+        <p>Register</p>
         <form>
-          <input
-            type='text'
-            id='username'
-            name='username'
-            placeholder='Username'
-            onChange={handleChangeUsername}
-          />
-          <input
-            type='text'
-            id='email'
-            name='email'
-            placeholder='Email'
-            onChange={handleChangeEmail}
-          />
-          <input
-            type='password'
-            id='password'
-            name='password'
-            placeholder='Password'
-            onChange={handleChangePassword}
-          />
-          <input
-            type='password'
-            id='confPassword'
-            name='confPassword'
-            placeholder='Confirm password'
-            onChange={handleChangeConfPassword}
-          />
+          <label htmlFor='username'>
+            UserName
+            <input
+              type='text'
+              id='username'
+              name='username'
+              placeholder='Username'
+              onChange={handleChangeUsername}
+            />
+          </label>
+          <label htmlFor='email'>
+            Email
+            <input
+              type='text'
+              id='email'
+              name='email'
+              placeholder='Email'
+              onChange={handleChangeEmail}
+            />
+          </label>
+          <label htmlFor='password'>
+            Password
+            <input
+              type='password'
+              id='password'
+              name='password'
+              placeholder='Password'
+              onChange={handleChangePassword}
+            />
+          </label>
+          <label htmlFor='confPassword'>
+            Confirm password
+            <input
+              type='password'
+              id='confPassword'
+              name='confPassword'
+              placeholder='Confirm password'
+              onChange={handleChangeConfPassword}
+            />
+          </label>
         </form>
         <button type='button' onClick={handleClose}>
           close
