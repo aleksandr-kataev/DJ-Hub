@@ -6,33 +6,31 @@ import { login } from '../../../actions/authActions';
 import { returnErrors } from '../../../actions/errorActions';
 import ModalStyles from './ModalStyle';
 
-const LogModal = ({ show, setLogModalShow }) => {
+const LogModal = ({ showLogModal, setShowLogModal }) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
 
-  const handleClose = () => {
-    setLogModalShow(false);
-  };
+  const { bg, modal, heading, label, input, submit } = ModalStyles;
 
   const handleChangeUsername = (e) => setUsername(e.target.value);
   const handleChangePassword = (e) => setPassword(e.target.value);
 
-  const handleBackgroundClick = (e) => {
-    setLogModalShow(false);
+  const handleCloseLogModal = () => {
+    setShowLogModal(false);
   };
 
-  if (!show) {
+  if (!showLogModal) {
     return null;
   }
   return (
-    <div className={ModalStyles.bg}>
-      <div className={ModalStyles.modal}>
-        <p className={ModalStyles.heading}>Login</p>
-        <form className={ModalStyles.form}>
-          <label htmlFor='username' className={ModalStyles.label}>
+    <div className={bg}>
+      <div className={modal}>
+        <p className={heading}>Login</p>
+        <form>
+          <label htmlFor='username' className={label}>
             Username
             <input
-              className={ModalStyles.input}
+              className={input}
               type='text'
               id='username'
               name='username'
@@ -40,10 +38,10 @@ const LogModal = ({ show, setLogModalShow }) => {
               onChange={handleChangeUsername}
             />
           </label>
-          <label htmlFor='password' className={ModalStyles.label}>
+          <label htmlFor='password' className={label}>
             Password
             <input
-              className={ModalStyles.input}
+              className={input}
               type='password'
               id='password'
               name='password'
@@ -53,8 +51,8 @@ const LogModal = ({ show, setLogModalShow }) => {
           </label>
           <button
             type='button'
-            className={ModalStyles.submit}
-            onClick={handleClose}
+            className={submit}
+            onClick={handleCloseLogModal}
           >
             Submit
           </button>
@@ -65,8 +63,8 @@ const LogModal = ({ show, setLogModalShow }) => {
 };
 
 LogModal.propTypes = {
-  setLogModalShow: PropTypes.func.isRequired,
-  show: PropTypes.bool.isRequired,
+  showLogModal: PropTypes.bool.isRequired,
+  setShowLogModal: PropTypes.func.isRequired,
 };
 
 const mapStateToPros = (state) => ({

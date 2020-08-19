@@ -1,11 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import NavBarStyles from './NavBarStyles';
 
-import Menu from './Menu/Menu';
-
-const NavBar = () => {
-  const isLoggedIn = false;
-  const [menuOpened, setmenuOpened] = useState(false);
+const NavBar = ({ showMenu, setShowMenu }) => {
   const { nav, leftCnt, rightCnt, button } = NavBarStyles;
   return (
     <>
@@ -17,15 +14,19 @@ const NavBar = () => {
           <button
             className={button}
             type='button'
-            onClick={() => setmenuOpened(!menuOpened)}
+            onClick={() => setShowMenu(!showMenu)}
           >
-            {menuOpened ? 'CLOSE' : 'MENU'}
+            {showMenu ? 'CLOSE' : 'MENU'}
           </button>
         </div>
       </nav>
-      <Menu menuOpened={menuOpened} isLoggedIn={isLoggedIn} />
     </>
   );
+};
+
+NavBar.propTypes = {
+  showMenu: PropTypes.bool.isRequired,
+  setShowMenu: PropTypes.func.isRequired,
 };
 
 export default NavBar;

@@ -1,27 +1,17 @@
-import React, { useState } from 'react';
-import { bool } from 'prop-types';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import MenuStyles from './MenuStyles';
-import RegModal from '../Modals/RegModal';
-import LogModal from '../Modals/LogModal';
 
-const Menu = ({ menuOpened, isLoggedIn }) => {
-  const { menu, closedMenu, openedMenu, ul, li } = MenuStyles;
-  const [logModalShow, setLogModalShow] = useState(false);
-  const [regModalShow, setRegModalShow] = useState(false);
+const Menu = ({ showMenu, setShowLogModal, setShowRegModal }) => {
+  const isLoggedIn = false;
+  const { menu, closedMenu, openedMenu, ul, li, button } = MenuStyles;
 
-  const handleLogInClick = () => {
-    setLogModalShow(true);
-  };
-
-  const handleRegClick = () => {
-    setRegModalShow(true);
-  };
+  const handleShowLogModal = () => setShowLogModal(true);
+  const handleShowRegModal = () => setShowRegModal(true);
 
   return (
-    <div
-      className={`${menu} ${menuOpened ? openedMenu : closedMenu}`}
-    >
+    <div className={`${menu} ${showMenu ? openedMenu : closedMenu}`}>
       {isLoggedIn ? (
         <>
           <ul className={ul}>
@@ -49,12 +39,20 @@ const Menu = ({ menuOpened, isLoggedIn }) => {
               <Link to='/'>Discover</Link>
             </li>
             <li className={li}>
-              <button type='button' onClick={handleLogInClick}>
+              <button
+                type='button'
+                className={button}
+                onClick={handleShowLogModal}
+              >
                 LogIn
               </button>
             </li>
             <li className={li}>
-              <button type='button' onClick={handleRegClick}>
+              <button
+                type='button'
+                className={button}
+                onClick={handleShowRegModal}
+              >
                 Join
               </button>
             </li>
@@ -62,14 +60,6 @@ const Menu = ({ menuOpened, isLoggedIn }) => {
               <Link to='/about'>About</Link>
             </li>
           </ul>
-          <RegModal
-            show={regModalShow}
-            setRegModalShow={setRegModalShow}
-          />
-          <LogModal
-            show={logModalShow}
-            setLogModalShow={setLogModalShow}
-          />
         </>
       )}
     </div>
@@ -77,8 +67,9 @@ const Menu = ({ menuOpened, isLoggedIn }) => {
 };
 
 Menu.propTypes = {
-  menuOpened: bool.isRequired,
-  isLoggedIn: bool.isRequired,
+  showMenu: PropTypes.bool.isRequired,
+  setShowLogModal: PropTypes.func.isRequired,
+  setShowRegModal: PropTypes.func.isRequired,
 };
 
 export default Menu;

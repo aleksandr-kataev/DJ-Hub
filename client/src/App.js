@@ -7,7 +7,7 @@ import {
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/authActions';
-import { Home, NavBar, About } from './components';
+import { Home, Controls, About } from './components';
 import './index.css';
 
 const App = () => {
@@ -18,7 +18,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <NavBar />
+        <Controls />
         <Switch>
           <Route exact path='/' component={Home} />
           <Route exact path='/about' component={About} />

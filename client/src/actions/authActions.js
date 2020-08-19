@@ -1,9 +1,15 @@
 import axios from 'axios';
 import { returnErrors } from './errorActions';
 import tokenConfig from './tokenConfig';
-import { USER_LOADED, USER_LOADING, AUTH_ERROR } from './types';
+import {
+  USER_LOADED,
+  USER_LOADING,
+  AUTH_ERROR,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
+} from './types';
 
-// check token && load user
+// Load user
 const loadUser = () => async (dispach, getState) => {
   // User loading
   dispach({ type: USER_LOADING });
@@ -25,10 +31,46 @@ const loadUser = () => async (dispach, getState) => {
     dispach({ type: AUTH_ERROR });
   }
 };
+// Register user
+const register = ({ username, email, password }) => async (
+  dispach,
+) => {
+  // Headers
+  const config = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
 
-const register = () => 0;
+  // Request body
+  const body = JSON.stringify({ username, email, password });
+
+  try {
+    const res = await axios.post(
+      'http://localhost:5000/api/user/register',
+      body,
+      config,
+    );
+
+    if (!res) throw new Error();
+    dispach({
+      type: REGISTER_SUCCESS,
+      payload: res.data,
+    });
+  } catch (e) {
+    dispach(
+      returnErrors(
+        e.response.data,
+        e.response.status,
+        'REGISTER_FAIL',
+      ),
+    );
+    dispach({
+      type: REGISTER_FAIL,
+    });
+  }
+};
 
 const login = () => 0;
 
-// eslint-disable-next-line import/prefer-default-export
 export { loadUser, register, login };
