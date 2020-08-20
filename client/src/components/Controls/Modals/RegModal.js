@@ -1,20 +1,16 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-unused-vars */
+/* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import ModalStyles from './ModalStyle';
 import { register } from '../../../actions/authActions';
-import {
-  returnErrors,
-  clearErrors,
-} from '../../../actions/errorActions';
+import { clearErrors } from '../../../actions/errorActions';
 
 const RegModal = ({
   isAuthenticated,
   error,
-  // eslint-disable-next-line no-shadow
   register,
+  clearErrors,
   showRegModal,
   setShowRegModal,
 }) => {
@@ -50,6 +46,7 @@ const RegModal = ({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (password !== confPassword) {
+      setErrMsg('Passwords do not match');
       return;
     }
 
@@ -151,8 +148,21 @@ const RegModal = ({
 RegModal.propTypes = {
   showRegModal: PropTypes.bool.isRequired,
   setShowRegModal: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
   register: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  error: PropTypes.shape({
+    msg: PropTypes.shape({
+      err: PropTypes.string,
+    }),
+    status: PropTypes.number,
+    id: PropTypes.string,
+  }),
+};
+
+RegModal.defaultProps = {
+  isAuthenticated: null,
+  error: null,
 };
 
 const mapStateToPros = (state) => ({
