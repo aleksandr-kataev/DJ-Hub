@@ -7,6 +7,7 @@ import {
   AUTH_ERROR,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
+  LOGOUT_SUCCESS,
 } from './types';
 
 // Load user
@@ -73,4 +74,9 @@ const register = ({ username, email, password }) => async (
 
 const login = () => 0;
 
-export { loadUser, register, login };
+// Logout a user
+const logout = () => ({
+  type: LOGOUT_SUCCESS,
+});
+
+export { loadUser, register, login, logout };
