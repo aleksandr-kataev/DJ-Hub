@@ -1,23 +1,62 @@
-/* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+/* eslint-disable no-shadow */
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { login } from '../../../actions/authActions';
-import { returnErrors } from '../../../actions/errorActions';
+import { clearErrors } from '../../../actions/errorActions';
 import ModalStyles from './ModalStyle';
 
-const LogModal = ({ showLogModal, setShowLogModal }) => {
+const LogModal = ({
+  showLogModal,
+  setShowLogModal,
+  isAuthenticated,
+  error,
+  login,
+  clearErrors,
+}) => {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
+  const [errMsg, setErrMsg] = useState(null);
 
-  const { bg, modal, heading, label, input, submit } = ModalStyles;
+  const {
+    bg,
+    modal,
+    heading,
+    label,
+    input,
+    submit,
+    err,
+    errMessage,
+  } = ModalStyles;
 
   const handleChangeUsername = (e) => setUsername(e.target.value);
   const handleChangePassword = (e) => setPassword(e.target.value);
 
   const handleCloseLogModal = () => {
+    clearErrors();
     setShowLogModal(false);
   };
+
+  const handleOnSumbit = (e) => {
+    e.preventDefault();
+    const user = { username, password };
+    login(user);
+  };
+
+  useEffect(() => {
+    if (error.id === 'LOGIN_FAIL') {
+      setErrMsg(error.msg.err);
+    } else {
+      setErrMsg(null);
+    }
+
+    // If authenticated, close modal
+    if (showLogModal) {
+      if (isAuthenticated) {
+        setShowLogModal(false);
+      }
+    }
+  }, [error, setShowLogModal, isAuthenticated, showLogModal]);
 
   if (!showLogModal) {
     return null;
@@ -49,14 +88,20 @@ const LogModal = ({ showLogModal, setShowLogModal }) => {
               onChange={handleChangePassword}
             />
           </label>
-          <button
-            type='button'
-            className={submit}
-            onClick={handleCloseLogModal}
-          >
-            Submit
-          </button>
+          <div className={err}>
+            <p className={errMessage}>{errMsg}</p>
+          </div>
         </form>
+        <button
+          type='button'
+          className={submit}
+          onClick={handleOnSumbit}
+        >
+          Submit
+        </button>
+        <button type='button' onClick={handleCloseLogModal}>
+          Close
+        </button>
       </div>
     </div>
   );
@@ -65,6 +110,21 @@ const LogModal = ({ showLogModal, setShowLogModal }) => {
 LogModal.propTypes = {
   showLogModal: PropTypes.bool.isRequired,
   setShowLogModal: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+  login: PropTypes.func.isRequired,
+  clearErrors: PropTypes.func.isRequired,
+  error: PropTypes.shape({
+    msg: PropTypes.shape({
+      err: PropTypes.string,
+    }),
+    status: PropTypes.number,
+    id: PropTypes.string,
+  }),
+};
+
+LogModal.defaultProps = {
+  isAuthenticated: null,
+  error: null,
 };
 
 const mapStateToPros = (state) => ({
@@ -72,4 +132,6 @@ const mapStateToPros = (state) => ({
   error: state.error,
 });
 
-export default connect(mapStateToPros, {})(LogModal);
+export default connect(mapStateToPros, { login, clearErrors })(
+  LogModal,
+);

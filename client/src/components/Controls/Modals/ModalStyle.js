@@ -6,7 +6,8 @@ const ModalStyle = {
   heading: 'text-center text-modalHeader mb-4 ',
   input:
     'shadow appearance-none border w-full py-2 px-3 mt-2 text-gray-700 leading-tight ',
-  submit: 'w-full mt-4 py-2 px-3 border border-2 border-gray-900',
+  submit:
+    'focus:outline-none w-full mt-4 py-2 px-3 border border-2 border-gray-900',
   err: '',
   errMessage: 'text-red-600',
 };

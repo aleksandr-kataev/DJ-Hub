@@ -33,7 +33,11 @@ const Menu = ({
               <Link to='/post'>POST</Link>
             </li>
             <li className={li}>
-              <button type='button' onClick={logout}>
+              <button
+                type='button'
+                className={button}
+                onClick={logout}
+              >
                 LOGOUT
               </button>
             </li>
