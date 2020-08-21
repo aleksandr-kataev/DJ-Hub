@@ -7,7 +7,9 @@ const CommentStyle = {
 
 const Comment = (numOfComments) => (
   <div className={CommentStyle.cntLike}>
-    <p className={CommentStyle.text}>{numOfComments}</p>
+    <p className={CommentStyle.text}>
+      {`Comments: ${numOfComments.numOfComments}`}
+    </p>
   </div>
 );
 

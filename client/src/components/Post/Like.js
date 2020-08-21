@@ -7,7 +7,9 @@ const LikeStyle = {
 
 const Like = (numOfLikes) => (
   <div className={LikeStyle.cntInteraction}>
-    <p className={LikeStyle.text}>{numOfLikes}</p>
+    <p className={LikeStyle.text}>
+      {`Likes: ${numOfLikes.numOfLikes}`}
+    </p>
   </div>
 );
 
