@@ -17,6 +17,7 @@ const getController = async (req, res) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 const postController = async (req, res) => {
   const { title, userID, link, tag } = req.body;
   try {
@@ -40,6 +41,9 @@ const postController = async (req, res) => {
     if (!user) throw Error('Failed to update');
     res.status(200).json({ response, added: true });
   } catch (err) {
+    if (err.code === 11000) {
+      return res.status(400).json({ err: 'link_taken' });
+    }
     res.status(500).json(err);
   }
 };
