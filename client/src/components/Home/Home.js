@@ -1,21 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import HomeStyles from './HomeStyles';
 import Post from '../Post';
+import { getPosts } from '../../actions/postsActions';
 
-const Home = () => {
-  const post = {
-    title: '1k mix',
-    date: new Date('August 19, 2020 16:05:00'),
-    numOfLikes: 12,
-    numOfComments: 13,
-    link: 'www.souncloud.com',
-    tag: 'dnb',
-  };
+// eslint-disable-next-line no-shadow
+const Home = ({ getPosts, posts }) => {
+  useEffect(() => {
+    getPosts();
+  }, [getPosts]);
+
+  if (posts.isLoading) {
+    return <>Loading</>;
+  }
+
   return (
     <div className={HomeStyles}>
-      <Post post={post} />
+      {posts.posts.map((post) => (
+        <Post post={post} />
+      ))}
     </div>
   );
 };
 
-export default Home;
+Home.propTypes = {
+  getPosts: PropTypes.func.isRequired,
+  posts: PropTypes.shape({
+    isLoading: PropTypes.bool,
+    posts: PropTypes.arrayOf,
+  }),
+};
+
+Home.defaultProps = {
+  posts: PropTypes.shape({
+    isLoading: false,
+    posts: [],
+  }),
+};
+
+const mapStateToProps = (state) => ({
+  posts: state.posts,
+});
+
+export default connect(mapStateToProps, { getPosts })(Home);

@@ -41,7 +41,7 @@ describe('/POST', () => {
     const res = await request(app).post('/api/posts').send({
       title: 'example mix',
       userID,
-      link: 'test.com',
+      link: 'test.com1',
       tag: 'test',
     });
     expect(res.statusCode).toEqual(401);

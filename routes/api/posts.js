@@ -29,6 +29,7 @@ const postController = async (req, res) => {
     });
     const response = await newPost.save();
     if (!response) throw Error('.save()_failed'); /// new HTTP ERROR
+
     const user = await User.findOneAndUpdate(
       { id: userID },
       {
@@ -50,11 +51,29 @@ const postController = async (req, res) => {
 
 const deleteController = async (req, res) => {
   try {
-    const removed = await Post.findOne({ id: req.body.id });
-    // check if the record exists
-    if (!removed) {
-      throw Error('Record not found');
+    const removed = await Post.remove({ id: req.body.postID });
+    if (!removed || removed.n === 0) {
+      throw Error('Record not removed');
     }
+
+    const user = await User.updateOne(
+      { id: req.body.userID },
+      { $pull: { posts: req.body.postID } },
+      { safe: true, multi: true },
+    );
+    if (!user) {
+      throw Error('User record not updated');
+    }
+
+    const usersLiked = await User.updateMany(
+      {},
+      { $pull: { likedPosts: req.body.postID } },
+      { safe: true, multi: true },
+    );
+    if (!usersLiked) {
+      throw Error('Users liked the post failed to updated');
+    }
+
     res.status(200).json({ deleted: true });
   } catch (err) {
     res.status(400).json(err);
@@ -111,7 +130,7 @@ const patchController = async (req, res) => {
 };
 
 // @route   GET api/posts
-// @desc    Get all posts
+// @desc    Get all postss
 // @access  Public
 router.get('/', getController);
 

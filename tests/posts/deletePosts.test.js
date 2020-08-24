@@ -42,14 +42,16 @@ describe('/DELETE', () => {
       .delete('/api/posts')
       .set({ 'x-auth-token': token })
       .send({
-        id: postID,
+        postID,
+        userID,
       });
     expect(res.statusCode).toEqual(200);
   });
   // send the token - should respond with a 200
   it('It should require authorization', async () => {
     const res = await request(app).delete('/api/posts').send({
-      id: postID,
+      postID,
+      userID,
     });
     expect(res.statusCode).toEqual(401);
   });
@@ -58,7 +60,8 @@ describe('/DELETE', () => {
     const res = await request(app)
       .delete('/api/posts')
       .send({
-        id: 'wrongID',
+        postID: 'wrongID',
+        userID,
       })
       .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(400);

@@ -6,7 +6,6 @@ const { Schema } = mongoose;
 const PostSchema = new Schema({
   id: {
     type: String,
-    required: true,
     default: uuid.v4(),
   },
   title: {
@@ -15,7 +14,7 @@ const PostSchema = new Schema({
   },
   date: {
     type: Date,
-    default: Date.now(),
+    default: new Date(),
   },
   userID: {
     type: String,
