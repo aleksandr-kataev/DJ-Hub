@@ -7,6 +7,7 @@ import { getPosts } from '../../actions/postsActions';
 
 // eslint-disable-next-line no-shadow
 const Home = ({ getPosts, posts }) => {
+  const { cntHome } = HomeStyles;
   useEffect(() => {
     getPosts();
   }, [getPosts]);
@@ -16,7 +17,7 @@ const Home = ({ getPosts, posts }) => {
   }
 
   return (
-    <div className={HomeStyles}>
+    <div className={cntHome}>
       {posts.posts.map((post) => (
         <Post post={post} />
       ))}

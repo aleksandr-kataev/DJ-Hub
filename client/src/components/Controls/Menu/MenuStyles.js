@@ -9,7 +9,3 @@ const MenuStyles = {
 };
 
 export default MenuStyles;
-
-// Controlls component
-// Which has a navbar, side menu and modals and they share states
-// inside the controlls component

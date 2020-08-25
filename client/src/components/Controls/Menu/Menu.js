@@ -30,7 +30,7 @@ const Menu = ({
               <Link to='/profile'>MY PROFILE</Link>
             </li>
             <li className={li}>
-              <Link to='/post'>POST</Link>
+              <Link to='/create-post'>POST</Link>
             </li>
             <li className={li}>
               <button

@@ -1,12 +1,20 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
+import ReactPlayer from 'react-player';
+import { AiFillHeart, AiOutlineComment } from 'react-icons/ai';
+import { IconContext } from 'react-icons';
 import PostStyles from './PostStyles';
-import Like from './Like';
 import Comment from './Comment';
-import MixLink from './MixLink';
 
 const Post = (post) => {
-  const { cntStyle, cntLink } = PostStyles;
+  const {
+    cntStyle,
+    cntTop,
+    cntBot,
+    cntCommentsClosed,
+    cntCommentsOpened,
+    cntLikeComment,
+  } = PostStyles;
   const {
     title,
     date,
@@ -16,6 +24,8 @@ const Post = (post) => {
     link,
     tag,
   } = post.post;
+
+  const [openComments, setOpenComments] = useState(false);
 
   const dateDiff = (postDate) => {
     const dateObj = new Date(postDate);
@@ -73,12 +83,43 @@ const Post = (post) => {
 
   return (
     <div className={cntStyle}>
-      <p>{title}</p>
-      <p>{tag}</p>
-      <MixLink link={link} />
-      <Like numOfLikes={numOfLikes} />
-      <Comment numOfComments={numOfComments} />
-      <p>{diff}</p>
+      <div className={cntTop}>
+        <span>{title}</span>
+        <span>{`#${tag}`}</span>
+      </div>
+      <ReactPlayer url={link} width='100%' height='100%' />
+      <div className={cntBot}>
+        <div className={cntLikeComment}>
+          <div className='flex mr-4'>
+            <IconContext.Provider
+              value={{ color: 'red', size: '25px' }}
+            >
+              <AiFillHeart />
+            </IconContext.Provider>
+
+            <span>{numOfLikes}</span>
+          </div>
+          <div className='flex'>
+            <IconContext.Provider
+              value={{ color: 'black', size: '25px' }}
+            >
+              <AiOutlineComment />
+            </IconContext.Provider>
+
+            <span>{numOfComments}</span>
+          </div>
+        </div>
+        <span>{diff}</span>
+      </div>
+      <div
+        className={
+          openComments ? cntCommentsOpened : cntCommentsClosed
+        }
+      >
+        {comments.map((comment) => (
+          <Comment comment={comment} />
+        ))}
+      </div>
     </div>
   );
 };

@@ -1,3 +1,5 @@
-const HomeStyles = {};
+const HomeStyles = {
+  cntHome: '',
+};
 
 export default HomeStyles;
