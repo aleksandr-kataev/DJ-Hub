@@ -15,10 +15,7 @@ const regController = async (req, res) => {
   const { username, email, password } = req.body;
   try {
     if (!username || !email || !password) {
-      throw new HTTPError(
-        'Not all fields have been entered',
-        400,
-      );
+      throw new HTTPError('Not all fields have been entered', 400);
     }
 
     const existingUsername = await User.findOne({
@@ -49,18 +46,14 @@ const regController = async (req, res) => {
       password: hash,
     });
 
-    const savedUser = await newUser.save();
-    if (!savedUser) {
+    const user = await newUser.save();
+    if (!user) {
       throw new HTTPError('.save()_failed', 500);
     }
 
-    const token = jwt.sign(
-      { id: savedUser.id },
-      JWT_SECRET,
-      {
-        expiresIn: 3600,
-      },
-    );
+    const token = jwt.sign({ id: user.id }, JWT_SECRET, {
+      expiresIn: 3600,
+    });
 
     if (!token) {
       throw new HTTPError('jwt.sign_failed', 500);
@@ -68,11 +61,7 @@ const regController = async (req, res) => {
 
     res.status(200).json({
       token,
-      newUser: {
-        userId: savedUser.id,
-        username: savedUser.username,
-        email: savedUser.email,
-      },
+      user,
     });
   } catch (err) {
     res
@@ -93,10 +82,7 @@ const loginController = async (req, res) => {
       throw new HTTPError('username_not_found', 400);
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password,
-    );
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw new HTTPError('invalid_pass', 400);
     }
@@ -109,18 +95,11 @@ const loginController = async (req, res) => {
     }
 
     res.status(200).json({
-      signedIn: true,
       token,
-      user: {
-        id: user.id,
-        name: user.username,
-        email: user.email,
-      },
+      user,
     });
   } catch (err) {
-    res
-      .status(err.code)
-      .json({ err: err.message, signedIn: false });
+    res.status(err.code).json({ err: err.message, signedIn: false });
   }
 };
 

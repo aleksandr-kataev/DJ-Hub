@@ -18,7 +18,7 @@ beforeAll((done) => {
     })
     .end((regErr, regRes) => {
       token = regRes.body.token;
-      userID = regRes.body.newUser.userId;
+      userID = regRes.body.user.id;
       request(app)
         .post('/api/posts')
         .set({ 'x-auth-token': token })

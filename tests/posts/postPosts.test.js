@@ -16,7 +16,7 @@ beforeAll((done) => {
       password: '12345',
     })
     .end((err, res) => {
-      userID = res.body.newUser.userId;
+      userID = res.body.user.id;
       token = res.body.token;
       done();
     });

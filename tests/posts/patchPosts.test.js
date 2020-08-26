@@ -18,7 +18,7 @@ beforeAll((done) => {
     })
     .end((regErr, regRes) => {
       token = regRes.body.token;
-      userID = regRes.body.newUser.userId;
+      userID = regRes.body.user.id;
       request(app)
         .post('/api/posts')
         .set({ 'x-auth-token': token })
@@ -55,7 +55,7 @@ describe('/PATCH ', () => {
         type: 'comment',
         userID,
         postID,
-        comment: 'test commnet',
+        comment: 'test comment',
       });
     expect(res.statusCode).toEqual(200);
   });
@@ -67,7 +67,7 @@ describe('/PATCH ', () => {
         type: 'comment',
         userID,
         postID: 'wrongID',
-        comment: 'test commnet',
+        comment: 'test comment',
       });
     expect(res.statusCode).toEqual(400);
   });
@@ -79,7 +79,7 @@ describe('/PATCH ', () => {
         type: 'like',
         userID: 'wrongID',
         postID,
-        comment: 'test commnet',
+        comment: 'test comment',
       });
     expect(res.statusCode).toEqual(400);
   });

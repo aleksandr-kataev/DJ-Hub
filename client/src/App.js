@@ -7,7 +7,7 @@ import {
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/authActions';
-import { Home, Controls, About, CreatePost } from './components';
+import { Discover, Controls, About, CreatePost } from './components';
 import './index.css';
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
       <Router>
         <Controls />
         <Switch>
-          <Route exact path='/' component={Home} />
+          <Route exact path='/' component={Discover} />
           <Route exact path='/about' component={About} />
           <Route exact path='/create-post' component={CreatePost} />
         </Switch>

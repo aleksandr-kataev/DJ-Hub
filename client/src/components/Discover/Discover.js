@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import HomeStyles from './HomeStyles';
+import DiscoverStyles from './DiscoverStyles';
 import Post from '../Post';
 import { getPosts } from '../../actions/postsActions';
 
 // eslint-disable-next-line no-shadow
-const Home = ({ getPosts, posts }) => {
-  const { cntHome } = HomeStyles;
+const Discover = ({ getPosts, posts }) => {
+  const { cntDiscover } = DiscoverStyles;
 
   useEffect(() => {
     getPosts();
@@ -18,7 +18,7 @@ const Home = ({ getPosts, posts }) => {
   }
 
   return (
-    <div className={cntHome}>
+    <div className={cntDiscover}>
       {posts.posts.map((post) => (
         <Post post={post} />
       ))}
@@ -26,7 +26,7 @@ const Home = ({ getPosts, posts }) => {
   );
 };
 
-Home.propTypes = {
+Discover.propTypes = {
   getPosts: PropTypes.func.isRequired,
   posts: PropTypes.shape({
     isLoading: PropTypes.bool,
@@ -52,7 +52,7 @@ Home.propTypes = {
   }),
 };
 
-Home.defaultProps = {
+Discover.defaultProps = {
   posts: PropTypes.shape({
     isLoading: false,
     posts: [],
@@ -65,4 +65,4 @@ const mapStateToProps = (state) => ({
     state.auth.user === null ? [] : state.auth.user.likedPosts,
 });
 
-export default connect(mapStateToProps, { getPosts })(Home);
+export default connect(mapStateToProps, { getPosts })(Discover);
