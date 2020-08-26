@@ -88,7 +88,14 @@ Menu.propTypes = {
     token: PropTypes.string,
     isAuthenticated: PropTypes.bool,
     isLoading: PropTypes.bool,
-    user: PropTypes.string,
+    user: PropTypes.shape({
+      id: PropTypes.string,
+      posts: PropTypes.arrayOf(PropTypes.string),
+      likedPosts: PropTypes.arrayOf(PropTypes.string),
+      _id: PropTypes.string,
+      username: PropTypes.string,
+      email: PropTypes.string,
+    }),
   }),
   logout: PropTypes.func.isRequired,
 };

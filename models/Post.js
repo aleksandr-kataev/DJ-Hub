@@ -25,10 +25,6 @@ const PostSchema = new Schema({
     type: Number,
     default: 0,
   },
-  numOfComments: {
-    type: Number,
-    default: 0,
-  },
   comments: {
     type: Array,
     default: [],

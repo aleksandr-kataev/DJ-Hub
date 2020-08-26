@@ -8,6 +8,7 @@ import { getPosts } from '../../actions/postsActions';
 // eslint-disable-next-line no-shadow
 const Home = ({ getPosts, posts }) => {
   const { cntHome } = HomeStyles;
+
   useEffect(() => {
     getPosts();
   }, [getPosts]);
@@ -29,7 +30,25 @@ Home.propTypes = {
   getPosts: PropTypes.func.isRequired,
   posts: PropTypes.shape({
     isLoading: PropTypes.bool,
-    posts: PropTypes.arrayOf,
+    posts: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        date: PropTypes.string,
+        numOfLikes: PropTypes.number,
+        comment: PropTypes.arrayOf(
+          PropTypes.shape({
+            userID: PropTypes.string,
+            comment: PropTypes.string,
+            date: PropTypes.date,
+          }),
+        ),
+        _id: PropTypes.string,
+        title: PropTypes.string,
+        userID: PropTypes.string,
+        link: PropTypes.string,
+        tag: PropTypes.string,
+      }),
+    ),
   }),
 };
 
@@ -42,6 +61,8 @@ Home.defaultProps = {
 
 const mapStateToProps = (state) => ({
   posts: state.posts,
+  likedPosts:
+    state.auth.user === null ? [] : state.auth.user.likedPosts,
 });
 
 export default connect(mapStateToProps, { getPosts })(Home);

@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
-import { AiFillHeart, AiOutlineComment } from 'react-icons/ai';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { VscComment } from 'react-icons/vsc';
 import { IconContext } from 'react-icons';
 import PostStyles from './PostStyles';
 import Comment from './Comment';
 
-const Post = (post) => {
+const Post = ({ post, likedPosts }) => {
   const {
     cntStyle,
     cntTop,
@@ -14,18 +17,13 @@ const Post = (post) => {
     cntCommentsClosed,
     cntCommentsOpened,
     cntLikeComment,
+    cntPlayer,
+    player,
   } = PostStyles;
-  const {
-    title,
-    date,
-    numOfLikes,
-    numOfComments,
-    comments,
-    link,
-    tag,
-  } = post.post;
+  const { id, title, date, numOfLikes, comments, link, tag } = post;
 
   const [openComments, setOpenComments] = useState(false);
+  const [liked, setLiked] = useState(null);
 
   const dateDiff = (postDate) => {
     const dateObj = new Date(postDate);
@@ -75,11 +73,12 @@ const Post = (post) => {
   const [diff, setDiff] = useState(dateDiff(date));
 
   useEffect(() => {
+    setLiked(likedPosts.includes(id));
     const check = setInterval(() => {
       setDiff(dateDiff(date));
     }, 10000);
     return () => clearInterval(check);
-  }, [date]);
+  }, [date, likedPosts]);
 
   return (
     <div className={cntStyle}>
@@ -87,26 +86,32 @@ const Post = (post) => {
         <span>{title}</span>
         <span>{`#${tag}`}</span>
       </div>
-      <ReactPlayer url={link} width='100%' height='100%' />
+      <div className={cntPlayer}>
+        <ReactPlayer
+          className={player}
+          url={link}
+          width='100%'
+          height='120px'
+        />
+      </div>
       <div className={cntBot}>
         <div className={cntLikeComment}>
-          <div className='flex mr-4'>
+          <div className='flex mr-6'>
             <IconContext.Provider
               value={{ color: 'red', size: '25px' }}
             >
-              <AiFillHeart />
+              {liked ? <AiFillHeart /> : <AiOutlineHeart />}
             </IconContext.Provider>
-
-            <span>{numOfLikes}</span>
+            <span className='flex ml-2'>{numOfLikes}</span>
           </div>
+
           <div className='flex'>
             <IconContext.Provider
               value={{ color: 'black', size: '25px' }}
             >
-              <AiOutlineComment />
+              <VscComment />
             </IconContext.Provider>
-
-            <span>{numOfComments}</span>
+            <span className='flex ml-2'>{comments.length}</span>
           </div>
         </div>
         <span>{diff}</span>
@@ -124,4 +129,35 @@ const Post = (post) => {
   );
 };
 
-export default Post;
+const mapStateToProps = (state) => ({
+  likedPosts:
+    state.auth.user === null ? [] : state.auth.user.likedPosts,
+});
+
+Post.propTypes = {
+  post: PropTypes.shape({
+    id: PropTypes.string,
+    date: PropTypes.string,
+    numOfLikes: PropTypes.number,
+    comments: PropTypes.arrayOf(
+      PropTypes.shape({
+        userID: PropTypes.string,
+        comment: PropTypes.string,
+        date: PropTypes.date,
+      }),
+    ),
+    _id: PropTypes.string,
+    title: PropTypes.string,
+    userID: PropTypes.string,
+    link: PropTypes.string,
+    tag: PropTypes.string,
+  }),
+  likedPosts: PropTypes.arrayOf(PropTypes.string),
+};
+
+Post.defaultProps = {
+  post: {},
+  likedPosts: [],
+};
+
+export default connect(mapStateToProps, {})(Post);
