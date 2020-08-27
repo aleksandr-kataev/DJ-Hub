@@ -61,7 +61,13 @@ const regController = async (req, res) => {
 
     res.status(200).json({
       token,
-      user,
+      user: {
+        id: user.id,
+        posts: user.posts,
+        likedPosts: user.likedPosts,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (err) {
     res
@@ -96,7 +102,13 @@ const loginController = async (req, res) => {
 
     res.status(200).json({
       token,
-      user,
+      user: {
+        id: user.id,
+        posts: user.posts,
+        likedPosts: user.likedPosts,
+        username: user.username,
+        email: user.email,
+      },
     });
   } catch (err) {
     res.status(err.code).json({ err: err.message, signedIn: false });
@@ -105,9 +117,10 @@ const loginController = async (req, res) => {
 
 const dataController = async (req, res) => {
   try {
-    const user = await User.findOne({
-      id: req.user.id,
-    }).select('-password');
+    const user = await User.findOne(
+      { id: req.user.id },
+      { _id: false, password: false },
+    );
     if (!user) throw Error('user_does_not_exist');
     res.json(user);
   } catch (err) {

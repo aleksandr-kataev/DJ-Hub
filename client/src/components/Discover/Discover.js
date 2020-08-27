@@ -42,7 +42,6 @@ Discover.propTypes = {
             date: PropTypes.date,
           }),
         ),
-        _id: PropTypes.string,
         title: PropTypes.string,
         userID: PropTypes.string,
         link: PropTypes.string,

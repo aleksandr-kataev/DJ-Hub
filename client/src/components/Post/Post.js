@@ -22,9 +22,6 @@ const Post = ({ post, likedPosts }) => {
   } = PostStyles;
   const { id, title, date, numOfLikes, comments, link, tag } = post;
 
-  const [openComments, setOpenComments] = useState(false);
-  const [liked, setLiked] = useState(null);
-
   const dateDiff = (postDate) => {
     const dateObj = new Date(postDate);
     const diffInTime = new Date() - dateObj;
@@ -70,7 +67,13 @@ const Post = ({ post, likedPosts }) => {
     return `${diff} months ago`;
   };
 
+  const [openComments, setOpenComments] = useState(false);
+  const [liked, setLiked] = useState(null);
   const [diff, setDiff] = useState(dateDiff(date));
+
+  const handleLike = () => {
+    setLiked(!liked);
+  };
 
   useEffect(() => {
     setLiked(likedPosts.includes(id));
@@ -100,7 +103,11 @@ const Post = ({ post, likedPosts }) => {
             <IconContext.Provider
               value={{ color: 'red', size: '25px' }}
             >
-              {liked ? <AiFillHeart /> : <AiOutlineHeart />}
+              {liked ? (
+                <AiFillHeart onClick={handleLike} />
+              ) : (
+                <AiOutlineHeart onClick={handleLike} />
+              )}
             </IconContext.Provider>
             <span className='flex ml-2'>{numOfLikes}</span>
           </div>
@@ -146,7 +153,6 @@ Post.propTypes = {
         date: PropTypes.date,
       }),
     ),
-    _id: PropTypes.string,
     title: PropTypes.string,
     userID: PropTypes.string,
     link: PropTypes.string,
@@ -161,3 +167,6 @@ Post.defaultProps = {
 };
 
 export default connect(mapStateToProps, {})(Post);
+
+// create routes for likes and comments separately
+// delay for liking

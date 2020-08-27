@@ -9,7 +9,9 @@ const User = require('../../models/User');
 
 const getController = async (req, res) => {
   try {
-    const posts = await Post.find().sort({ date: -1 });
+    const posts = await Post.find({}, { _id: false }).sort({
+      date: -1,
+    });
     if (!posts) throw Error('.find()_failed');
     res.json(posts);
   } catch (err) {

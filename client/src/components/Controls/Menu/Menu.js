@@ -92,7 +92,6 @@ Menu.propTypes = {
       id: PropTypes.string,
       posts: PropTypes.arrayOf(PropTypes.string),
       likedPosts: PropTypes.arrayOf(PropTypes.string),
-      _id: PropTypes.string,
       username: PropTypes.string,
       email: PropTypes.string,
     }),
