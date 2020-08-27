@@ -2,10 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { VscComment } from 'react-icons/vsc';
 import { IconContext } from 'react-icons';
+import { PostProps, DefaultPostProps } from '../../types/index';
 import PostStyles from './PostStyles';
 import Comment from './Comment';
 
@@ -141,30 +141,8 @@ const mapStateToProps = (state) => ({
     state.auth.user === null ? [] : state.auth.user.likedPosts,
 });
 
-Post.propTypes = {
-  post: PropTypes.shape({
-    id: PropTypes.string,
-    date: PropTypes.string,
-    numOfLikes: PropTypes.number,
-    comments: PropTypes.arrayOf(
-      PropTypes.shape({
-        userID: PropTypes.string,
-        comment: PropTypes.string,
-        date: PropTypes.date,
-      }),
-    ),
-    title: PropTypes.string,
-    userID: PropTypes.string,
-    link: PropTypes.string,
-    tag: PropTypes.string,
-  }),
-  likedPosts: PropTypes.arrayOf(PropTypes.string),
-};
-
-Post.defaultProps = {
-  post: {},
-  likedPosts: [],
-};
+Post.propTypes = PostProps;
+Post.defaultProps = DefaultPostProps;
 
 export default connect(mapStateToProps, {})(Post);
 

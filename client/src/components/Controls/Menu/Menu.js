@@ -1,8 +1,8 @@
 /* eslint-disable no-shadow */
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { MenuProps, DefaultMenuProps } from '../../../types/index';
 import MenuStyles from './MenuStyles';
 import { logout } from '../../../actions/authActions';
 
@@ -80,33 +80,8 @@ const Menu = ({
   );
 };
 
-Menu.propTypes = {
-  showMenu: PropTypes.bool.isRequired,
-  setShowLogModal: PropTypes.func.isRequired,
-  setShowRegModal: PropTypes.func.isRequired,
-  auth: PropTypes.shape({
-    token: PropTypes.string,
-    isAuthenticated: PropTypes.bool,
-    isLoading: PropTypes.bool,
-    user: PropTypes.shape({
-      id: PropTypes.string,
-      posts: PropTypes.arrayOf(PropTypes.string),
-      likedPosts: PropTypes.arrayOf(PropTypes.string),
-      username: PropTypes.string,
-      email: PropTypes.string,
-    }),
-  }),
-  logout: PropTypes.func.isRequired,
-};
-
-Menu.defaultProps = {
-  auth: {
-    token: null,
-    isAuthenticated: null,
-    isLoading: false,
-    user: null,
-  },
-};
+Menu.propTypes = MenuProps;
+Menu.defaultProps = DefaultMenuProps;
 
 const mapStateToProps = (state) => ({
   auth: state.auth,

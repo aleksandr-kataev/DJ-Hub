@@ -1,7 +1,10 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import {
+  LogModalProps,
+  DefaultLogModalProps,
+} from '../../../types/index';
 import { login } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
 import ModalStyles from './ModalStyle';
@@ -107,25 +110,8 @@ const LogModal = ({
   );
 };
 
-LogModal.propTypes = {
-  showLogModal: PropTypes.bool.isRequired,
-  setShowLogModal: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool,
-  login: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  error: PropTypes.shape({
-    msg: PropTypes.shape({
-      err: PropTypes.string,
-    }),
-    status: PropTypes.number,
-    id: PropTypes.string,
-  }),
-};
-
-LogModal.defaultProps = {
-  isAuthenticated: null,
-  error: null,
-};
+LogModal.propTypes = LogModalProps;
+LogModal.defaultProps = DefaultLogModalProps;
 
 const mapStateToPros = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,

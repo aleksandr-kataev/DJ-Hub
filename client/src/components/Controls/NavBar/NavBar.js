@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { NavBarProps } from '../../../types/index';
 import NavBarStyles from './NavBarStyles';
 
 const NavBar = ({ showMenu, setShowMenu }) => {
@@ -24,9 +24,6 @@ const NavBar = ({ showMenu, setShowMenu }) => {
   );
 };
 
-NavBar.propTypes = {
-  showMenu: PropTypes.bool.isRequired,
-  setShowMenu: PropTypes.func.isRequired,
-};
+NavBar.propTypes = NavBarProps;
 
 export default NavBar;

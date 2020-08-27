@@ -1,7 +1,7 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { RegModalProps, DefaultRegModalProps } from '../../../types';
 import ModalStyles from './ModalStyle';
 import { register } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
@@ -145,25 +145,8 @@ const RegModal = ({
   );
 };
 
-RegModal.propTypes = {
-  showRegModal: PropTypes.bool.isRequired,
-  setShowRegModal: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool,
-  register: PropTypes.func.isRequired,
-  clearErrors: PropTypes.func.isRequired,
-  error: PropTypes.shape({
-    msg: PropTypes.shape({
-      err: PropTypes.string,
-    }),
-    status: PropTypes.number,
-    id: PropTypes.string,
-  }),
-};
-
-RegModal.defaultProps = {
-  isAuthenticated: null,
-  error: null,
-};
+RegModal.propTypes = RegModalProps;
+RegModal.defaultProps = DefaultRegModalProps;
 
 const mapStateToPros = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,

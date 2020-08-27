@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import {
+  DiscoverProps,
+  DefaultDiscoverProps,
+} from '../../types/index';
 import DiscoverStyles from './DiscoverStyles';
 import Post from '../Post';
 import { getPosts } from '../../actions/postsActions';
@@ -26,37 +29,8 @@ const Discover = ({ getPosts, posts }) => {
   );
 };
 
-Discover.propTypes = {
-  getPosts: PropTypes.func.isRequired,
-  posts: PropTypes.shape({
-    isLoading: PropTypes.bool,
-    posts: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        date: PropTypes.string,
-        numOfLikes: PropTypes.number,
-        comment: PropTypes.arrayOf(
-          PropTypes.shape({
-            userID: PropTypes.string,
-            comment: PropTypes.string,
-            date: PropTypes.date,
-          }),
-        ),
-        title: PropTypes.string,
-        userID: PropTypes.string,
-        link: PropTypes.string,
-        tag: PropTypes.string,
-      }),
-    ),
-  }),
-};
-
-Discover.defaultProps = {
-  posts: PropTypes.shape({
-    isLoading: false,
-    posts: [],
-  }),
-};
+Discover.propTypes = DiscoverProps;
+Discover.defaultProps = DefaultDiscoverProps;
 
 const mapStateToProps = (state) => ({
   posts: state.posts,
