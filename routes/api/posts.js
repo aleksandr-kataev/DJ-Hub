@@ -1,26 +1,27 @@
 const express = require('express');
+const uuid = require('uuid');
 
 const router = express.Router();
 const auth = require('../../middleware/auth');
+const { HTTPError } = require('../../util');
 
 // Models
 const Post = require('../../models/Post');
 const User = require('../../models/User');
 
-const getController = async (req, res) => {
+const getPostsController = async (req, res) => {
   try {
     const posts = await Post.find({}, { _id: false }).sort({
       date: -1,
     });
-    if (!posts) throw Error('.find()_failed');
-    res.json(posts);
+    if (!posts) throw new HTTPError('.find()_failed', 500);
+    return res.json(posts);
   } catch (err) {
-    res.status(500).json(err);
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
-// eslint-disable-next-line consistent-return
-const postController = async (req, res) => {
+const postPostController = async (req, res) => {
   const { title, userID, link, tag } = req.body;
   try {
     const newPost = new Post({
@@ -30,7 +31,7 @@ const postController = async (req, res) => {
       tag,
     });
     const response = await newPost.save();
-    if (!response) throw Error('.save()_failed'); /// new HTTP ERROR
+    if (!response) throw new HTTPError('.save()_failed', 500); /// new HTTP ERROR
 
     const user = await User.findOneAndUpdate(
       { id: userID },
@@ -41,114 +42,212 @@ const postController = async (req, res) => {
       },
       { new: true },
     );
-    if (!user) throw Error('Failed to update');
-    res.status(200).json({ response, added: true });
+    if (!user) throw new HTTPError('Failed to update', 400);
+    return res.status(200).json({ response, added: true });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({ err: 'link_taken' });
     }
-    res.status(500).json(err);
+    return res
+      .status(err.code)
+      .json({ msg: err.message, modified: false });
   }
 };
 
-const deleteController = async (req, res) => {
+const deletePostController = async (req, res) => {
+  const { postID, userID } = req.params;
   try {
-    const removed = await Post.remove({ id: req.body.postID });
+    const removed = await Post.remove({ id: postID });
     if (!removed || removed.n === 0) {
-      throw Error('Record not removed');
+      throw new HTTPError('Record not removed', 400);
     }
 
     const user = await User.updateOne(
-      { id: req.body.userID },
-      { $pull: { posts: req.body.postID } },
+      { id: userID },
+      { $pull: { posts: postID } },
       { safe: true, multi: true },
     );
     if (!user) {
-      throw Error('User record not updated');
+      throw new HTTPError('User record not updated', 400);
     }
 
     const usersLiked = await User.updateMany(
       {},
-      { $pull: { likedPosts: req.body.postID } },
+      { $pull: { likedPosts: postID } },
       { safe: true, multi: true },
     );
     if (!usersLiked) {
-      throw Error('Users liked the post failed to updated');
+      throw new HTTPError(
+        'Users liked the post failed to updated',
+        500,
+      );
     }
 
-    res.status(200).json({ deleted: true });
+    return res.status(200).json({ deleted: true });
   } catch (err) {
-    res.status(400).json(err);
+    return res
+      .status(err.code)
+      .json({ msg: err.message, deleted: false });
   }
 };
 
-const patchController = async (req, res) => {
-  const { type, userID, postID } = req.body;
+const likeController = async (req, res) => {
+  const { userID, postID } = req.params;
   try {
-    if (type === 'like') {
-      const post = await Post.findOneAndUpdate(
-        { id: postID },
-        { $inc: { numofLikes: 1 } },
-        { new: true },
-      );
-      if (!post) {
-        throw Error(post);
-      }
-      const user = await User.findOneAndUpdate(
-        { id: userID },
-        {
-          $push: {
-            likedPosts: postID,
-          },
-        },
-        { new: true },
-      );
-      if (!user) {
-        throw Error('User not found');
-      }
-    } else if (type === 'comment') {
-      const { comment } = req.body;
-      const post = await Post.findOneAndUpdate(
-        { id: postID },
-        {
-          $push: {
-            comments: {
-              comment,
-              user: userID,
-              date: Date.now,
-            },
-          },
-        },
-        { new: true },
-      );
-      if (!post) {
-        throw Error('Record not found');
-      }
+    const post = await Post.findOneAndUpdate(
+      { id: postID },
+      { $inc: { numofLikes: 1 } },
+      { new: true },
+    );
+    if (!post) {
+      throw new HTTPError('post_not_found', 400);
     }
-    res.status(200).json({ modified: true });
+
+    const user = await User.findOneAndUpdate(
+      { id: userID },
+      {
+        $push: {
+          likedPosts: postID,
+        },
+      },
+      { new: true },
+    );
+    if (!user) {
+      throw new HTTPError('user_not_found', 400);
+    }
+
+    return res.status(200).json({ modified: true });
   } catch (err) {
-    res.status(400).json({ msg: err.message, modified: false });
+    return res
+      .status(err.code)
+      .json({ msg: err.message, modified: false });
+  }
+};
+
+const unlikeController = async (req, res) => {
+  const { userID, postID } = req.params;
+  try {
+    const post = await Post.findOneAndUpdate(
+      { id: postID },
+      { $inc: { numofLikes: -1 } },
+      { new: true },
+    );
+    if (!post) {
+      throw new HTTPError('post_not_found', 400);
+    }
+
+    const user = await User.findOneAndUpdate(
+      { id: userID },
+      {
+        $pull: {
+          likedPosts: postID,
+        },
+      },
+      { new: true },
+    );
+    if (!user) {
+      throw new HTTPError('user_not_found', 400);
+    }
+
+    return res.status(200).json({ modified: true });
+  } catch (err) {
+    return res
+      .status(err.code)
+      .json({ msg: err.message, modified: false });
+  }
+};
+
+const commentController = async (req, res) => {
+  const { userID, postID } = req.params;
+  const { comment } = req.body;
+  const id = uuid.v4();
+  try {
+    const post = await Post.findOneAndUpdate(
+      { id: postID },
+      {
+        $push: {
+          comments: {
+            commentID: id,
+            comment,
+            user: userID,
+            date: Date.now,
+          },
+        },
+      },
+      { new: true },
+    );
+    if (!post) {
+      throw new HTTPError('Record not found', 400);
+    }
+    return res.status(200).json({ modified: true, id });
+  } catch (err) {
+    return res
+      .status(err.code)
+      .json({ msg: err.message, modified: false });
+  }
+};
+
+const delCommentController = async (req, res) => {
+  const { postID, commentID } = req.params;
+  try {
+    const post = await Post.findOneAndUpdate(
+      { id: postID },
+      {
+        $pull: {
+          comments: { commentID },
+        },
+      },
+      { new: true },
+    );
+    if (!post) {
+      throw new HTTPError('Record not found', 400);
+    }
+
+    return res.status(200).json({ modified: true });
+  } catch (err) {
+    return res
+      .status(err.code)
+      .json({ msg: err.message, modified: false });
   }
 };
 
 // @route   GET api/posts
 // @desc    Get all postss
 // @access  Public
-router.get('/', getController);
+router.get('/', getPostsController);
 
 // @route   POST api/posts
 // @desc    Add new post
 // @access  Private
-router.post('/', auth, postController);
+router.post('/', auth, postPostController);
 
 // @route   DELETE api/posts/
 // @desc    Delete post
 // @access  Private
-router.delete('/', auth, deleteController);
+router.delete('/:postID/:userID', auth, deletePostController);
 
-// @route   PATCH api/posts/
-// @desc    Like or comment on the post
+// @route   POST api/posts/:postID/like/:userID
+// @desc    Like a post
 // @access  Private
-router.patch('/', auth, patchController);
+router.post('/:postID/like/:userID', auth, likeController);
+
+// @route   DELETE api/posts/:postID/unlike/:userID
+// @desc    Unlike a post
+// @access  Private
+router.delete('/:postID/unlike/:userID', auth, unlikeController);
+
+// @route   POST api/posts/:postID/comment/:userID
+// @desc    Comment on a post
+// @access  Private
+router.post('/:postID/comment/:userID', auth, commentController);
+
+// @route   DELETE api/posts/:postID/delComment
+// @desc    Delete a comment on a post
+// @access  Private
+router.delete(
+  '/:postID/delComment/:commentID',
+  auth,
+  delCommentController,
+);
 
 module.exports = router;

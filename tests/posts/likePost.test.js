@@ -35,52 +35,47 @@ beforeAll((done) => {
     });
 });
 
-describe('/PATCH ', () => {
-  it('Should return JSON by passing like', async () => {
+describe('/POST ', () => {
+  it('Should return JSON with {modified: true}', async () => {
     const res = await request(app)
-      .patch('/api/posts')
-      .set({ 'x-auth-token': token })
-      .send({
-        type: 'like',
-        userID,
-        postID,
-      });
+      .post(`/api/posts/${postID}/like/${userID}`)
+      .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(200);
   });
-  it('Should return JSON by passing comment', async () => {
-    const res = await request(app)
-      .patch('/api/posts')
-      .set({ 'x-auth-token': token })
-      .send({
-        type: 'comment',
-        userID,
-        postID,
-        comment: 'test comment',
-      });
-    expect(res.statusCode).toEqual(200);
+  it('Should return 401 as no token is passed', async () => {
+    const res = await request(app).post(
+      `/api/posts/${postID}/like/${userID}`,
+    );
+    expect(res.statusCode).toEqual(401);
   });
+
   it('Should return a 400 as the postID does not exist in the DB', async () => {
     const res = await request(app)
-      .patch('/api/posts')
-      .set({ 'x-auth-token': token })
-      .send({
-        type: 'comment',
-        userID,
-        postID: 'wrongID',
-        comment: 'test comment',
-      });
+      .post(`/api/posts/wrongPostID/like/${userID}`)
+      .set({ 'x-auth-token': token });
+
     expect(res.statusCode).toEqual(400);
   });
-  it('Should return a 400 as the userID does not exist in the DB', async () => {
+});
+
+describe('/DELETE ', () => {
+  it('Should return JSON with {modified: true}', async () => {
     const res = await request(app)
-      .patch('/api/posts')
-      .set({ 'x-auth-token': token })
-      .send({
-        type: 'like',
-        userID: 'wrongID',
-        postID,
-        comment: 'test comment',
-      });
+      .delete(`/api/posts/${postID}/unlike/${userID}`)
+      .set({ 'x-auth-token': token });
+    expect(res.statusCode).toEqual(200);
+  });
+  it('Should return 401 as no token is passed', async () => {
+    const res = await request(app).delete(
+      `/api/posts/${postID}/unlike/${userID}`,
+    );
+    expect(res.statusCode).toEqual(401);
+  });
+
+  it('Should return a 400 as the postID does not exist in the DB', async () => {
+    const res = await request(app)
+      .delete(`/api/posts/wrongPostID/unlike/${userID}`)
+      .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(400);
   });
 });

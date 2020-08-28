@@ -141,6 +141,6 @@ router.post('/login', loginController);
 // @route   GET api/user
 // @desc    Get user data
 // @access  Private
-router.get('/', auth, dataController);
+router.get('/:userID', auth, dataController);
 
 module.exports = router;

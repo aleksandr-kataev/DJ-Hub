@@ -39,30 +39,28 @@ describe('/DELETE', () => {
   // token not being sent - should respond with a 401
   it('It responds with JSON', async () => {
     const res = await request(app)
-      .delete('/api/posts')
-      .set({ 'x-auth-token': token })
-      .send({
-        postID,
-        userID,
-      });
+      .delete(`/api/posts/${postID}/${userID}`)
+      .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(200);
   });
   // send the token - should respond with a 200
   it('It should require authorization', async () => {
-    const res = await request(app).delete('/api/posts').send({
-      postID,
-      userID,
-    });
+    const res = await request(app).delete(
+      `/api/posts/${postID}/${userID}`,
+    );
     expect(res.statusCode).toEqual(401);
   });
   // Wrong postID supplied, should not find it and respond with a 400
   it('It should not find the record', async () => {
     const res = await request(app)
-      .delete('/api/posts')
-      .send({
-        postID: 'wrongID',
-        userID,
-      })
+      .delete(`/api/posts/wrongID/${userID}`)
+      .set({ 'x-auth-token': token });
+    expect(res.statusCode).toEqual(400);
+  });
+  // Wrong userID supplied, should not find it and respond with a 400
+  it('It should not find the record', async () => {
+    const res = await request(app)
+      .delete(`/api/posts/${postID}/wrongID`)
       .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(400);
   });
