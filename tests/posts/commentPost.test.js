@@ -36,7 +36,7 @@ beforeAll((done) => {
             .set({ 'x-auth-token': token })
             .send({ comment: 'Test comment' })
             .end((commentErr, commentRes) => {
-              commentID = commentRes.body.id;
+              commentID = commentRes.body.comment.id;
               done();
             });
         });

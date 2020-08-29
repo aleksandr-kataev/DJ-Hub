@@ -9,7 +9,7 @@ import { PostProps, DefaultPostProps } from '../../types/index';
 import PostStyles from './PostStyles';
 import Comment from './Comment';
 
-const Post = ({ post, likedPosts }) => {
+const Post = ({ post, likedPosts, auth }) => {
   const {
     cntStyle,
     cntTop,
@@ -26,11 +26,11 @@ const Post = ({ post, likedPosts }) => {
     const dateObj = new Date(postDate);
     const diffInTime = new Date() - dateObj;
     // Return diff in seconds
+    if (diffInTime < 10000) {
+      return 'just now';
+    }
     if (diffInTime < 60000) {
       const diff = Math.round(diffInTime / 1000);
-      if (diff === 1) {
-        return '1 second ago';
-      }
       return `${diff} seconds ago`;
     }
     // Return diff in minutes
@@ -69,19 +69,33 @@ const Post = ({ post, likedPosts }) => {
 
   const [openComments, setOpenComments] = useState(false);
   const [liked, setLiked] = useState(null);
+  const [likeCount, setLikeCount] = useState(null);
+  const [commentCount, setCommentCount] = useState(null);
   const [diff, setDiff] = useState(dateDiff(date));
 
   const handleLike = () => {
-    setLiked(!liked);
+    if (auth.isAuthenticated) {
+      // redux action
+      setLiked(!liked);
+      if (liked) {
+        setLikeCount(likeCount - 1);
+      } else {
+        setLikeCount(likeCount + 1);
+      }
+    } else {
+      alert('must be logged in');
+    }
   };
 
   useEffect(() => {
     setLiked(likedPosts.includes(id));
+    setLikeCount(numOfLikes);
+    setCommentCount(comments.length);
     const check = setInterval(() => {
       setDiff(dateDiff(date));
     }, 10000);
     return () => clearInterval(check);
-  }, [date, likedPosts]);
+  }, [date, id, likedPosts, numOfLikes, comments]);
 
   return (
     <div className={cntStyle}>
@@ -109,7 +123,7 @@ const Post = ({ post, likedPosts }) => {
                 <AiOutlineHeart onClick={handleLike} />
               )}
             </IconContext.Provider>
-            <span className='flex ml-2'>{numOfLikes}</span>
+            <span className='flex ml-2'>{likeCount}</span>
           </div>
 
           <div className='flex'>
@@ -118,7 +132,7 @@ const Post = ({ post, likedPosts }) => {
             >
               <VscComment />
             </IconContext.Provider>
-            <span className='flex ml-2'>{comments.length}</span>
+            <span className='flex ml-2'>{commentCount}</span>
           </div>
         </div>
         <span>{diff}</span>
@@ -137,6 +151,7 @@ const Post = ({ post, likedPosts }) => {
 };
 
 const mapStateToProps = (state) => ({
+  auth: state.auth,
   likedPosts:
     state.auth.user === null ? [] : state.auth.user.likedPosts,
 });

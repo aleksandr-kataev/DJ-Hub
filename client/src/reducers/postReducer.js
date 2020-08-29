@@ -2,8 +2,11 @@ import {
   ADD_POST,
   DELETE_POST,
   POSTS_LOADING,
-  SEARCH_NOT_FOUND,
   POSTS_LOADED,
+  LIKE_POST,
+  UNLIKE_POST,
+  COMMENT_POST,
+  DELETE_COMMENT,
 } from '../actions/types';
 
 const initialState = {
@@ -24,11 +27,6 @@ export default (state = initialState, action) => {
         posts: action.payload,
         isLoading: false,
       };
-    case SEARCH_NOT_FOUND:
-      return {
-        ...state,
-        isLoading: false,
-      };
     case ADD_POST:
       return {
         ...state,
@@ -40,6 +38,28 @@ export default (state = initialState, action) => {
         posts: state.items.filter(
           (post) => post.id !== action.payload,
         ),
+      };
+    case LIKE_POST:
+      return {
+        ...state,
+        // update likeCount
+      };
+    case UNLIKE_POST:
+      return {
+        ...state,
+        // update likeCount
+      };
+    case COMMENT_POST:
+      return {
+        ...state,
+        post: state,
+        // update comment
+      };
+    case DELETE_COMMENT:
+      return {
+        ...state,
+        post: state,
+        // update comment
       };
     default:
       return state;

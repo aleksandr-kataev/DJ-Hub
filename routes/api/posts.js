@@ -160,18 +160,18 @@ const unlikeController = async (req, res) => {
 const commentController = async (req, res) => {
   const { userID, postID } = req.params;
   const { comment } = req.body;
-  const id = uuid.v4();
+  const commentObj = {
+    commentID: uuid.v4(),
+    comment,
+    user: userID,
+    date: Date.now,
+  };
   try {
     const post = await Post.findOneAndUpdate(
       { id: postID },
       {
         $push: {
-          comments: {
-            commentID: id,
-            comment,
-            user: userID,
-            date: Date.now,
-          },
+          comments: commentObj,
         },
       },
       { new: true },
@@ -179,7 +179,9 @@ const commentController = async (req, res) => {
     if (!post) {
       throw new HTTPError('Record not found', 400);
     }
-    return res.status(200).json({ modified: true, id });
+    return res
+      .status(200)
+      .json({ modified: true, comment: commentObj });
   } catch (err) {
     return res
       .status(err.code)

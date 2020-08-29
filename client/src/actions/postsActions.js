@@ -4,10 +4,15 @@ import {
   DELETE_POST,
   POSTS_LOADING,
   POSTS_LOADED,
+  LIKE_POST,
+  UNLIKE_POST,
+  COMMENT_POST,
+  DELETE_COMMENT,
 } from './types';
 
 import tokenConfig from './tokenConfig';
 import { returnErrors } from './errorActions';
+import { loadUser } from './authActions';
 
 const getPosts = () => async (dispatch) => {
   dispatch({ type: POSTS_LOADING });
@@ -39,10 +44,78 @@ const deletePost = (postID) => async (dispatch, getState) => {
       { postID, userID: getState().auth.user.id },
       tokenConfig(getState),
     );
+
     dispatch({ type: DELETE_POST, payload: res.data });
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
 };
 
-export { getPosts, addPost, deletePost };
+const likePost = (postID) => async (dispatch, getState) => {
+  try {
+    const res = await axios.delete(
+      `http://localhost:5000/api/posts/${postID}/like/${
+        getState().auth.user.id
+      }`,
+      tokenConfig(getState),
+    );
+    await dispatch({ type: LIKE_POST, payload: res.data });
+    loadUser();
+  } catch (e) {
+    dispatch(returnErrors(e.response.data, e.response.status));
+  }
+};
+
+const unlikePost = (postID) => async (dispatch, getState) => {
+  try {
+    const res = await axios.delete(
+      `http://localhost:5000/api/posts/${postID}/unlike/${
+        getState().auth.user.id
+      }`,
+      tokenConfig(getState),
+    );
+    await dispatch({ type: UNLIKE_POST, payload: res.data });
+    loadUser();
+  } catch (e) {
+    dispatch(returnErrors(e.response.data, e.response.status));
+  }
+};
+
+const commentPost = (postID) => async (dispatch, getState) => {
+  try {
+    const res = await axios.delete(
+      `http://localhost:5000/api/posts/${postID}/comment/${
+        getState().auth.user.id
+      }`,
+      tokenConfig(getState),
+    );
+    dispatch({ type: COMMENT_POST, payload: res.data });
+  } catch (e) {
+    dispatch(returnErrors(e.response.data, e.response.status));
+  }
+};
+
+const deleteComment = (postID, commentID) => async (
+  dispatch,
+  getState,
+) => {
+  try {
+    const res = await axios.delete(
+      `http://localhost:5000/api/posts/${postID}/delComment/${commentID}`,
+      tokenConfig(getState),
+    );
+    dispatch({ type: DELETE_COMMENT, payload: res.data });
+  } catch (e) {
+    dispatch(returnErrors(e.response.data, e.response.status));
+  }
+};
+
+export {
+  getPosts,
+  addPost,
+  deletePost,
+  likePost,
+  unlikePost,
+  commentPost,
+  deleteComment,
+};
