@@ -35,31 +35,51 @@ export default (state = initialState, action) => {
     case DELETE_POST:
       return {
         ...state,
-        posts: state.items.filter(
+        posts: state.posts.filter(
           (post) => post.id !== action.payload,
         ),
       };
     case LIKE_POST:
       return {
         ...state,
-        // update likeCount
+        posts: state.posts.map((post) => {
+          if (post.id === action.payload.postID) {
+            return { ...post, numOfLikes: post.numOfLikes + 1 };
+          }
+          return post;
+        }),
       };
     case UNLIKE_POST:
       return {
         ...state,
-        // update likeCount
+        posts: state.posts.map((post) => {
+          if (post.id === action.payload.postID) {
+            return { ...post, numOfLikes: post.numOfLikes - 1 };
+          }
+          return post;
+        }),
       };
     case COMMENT_POST:
       return {
         ...state,
-        post: state,
-        // update comment
+        post: state.posts.map((post) => {
+          if (post.id === action.payload.postID) {
+            return [...post.comments, action.payload.comment];
+          }
+          return post;
+        }),
       };
     case DELETE_COMMENT:
       return {
         ...state,
-        post: state,
-        // update comment
+        post: state.posts.map((post) => {
+          if (post.id === action.payload.postID) {
+            return post.comments.filter(
+              (comment) => comment.id !== action.payload.commentID,
+            );
+          }
+          return post;
+        }),
       };
     default:
       return state;

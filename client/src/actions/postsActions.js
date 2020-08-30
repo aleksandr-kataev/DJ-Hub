@@ -31,7 +31,8 @@ const addPost = (post) => async (dispatch, getState) => {
       { ...post, userID: getState().auth.user.id },
       tokenConfig(getState),
     );
-    dispatch({ type: ADD_POST, payload: res.data });
+    await dispatch({ type: ADD_POST, payload: res.data });
+    loadUser();
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
