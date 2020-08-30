@@ -28,8 +28,6 @@ const addPost = (post) => async (dispatch, getState) => {
   try {
     const res = await axios.post(
       'http://localhost:5000/api/posts',
-      // might result in wrong object (userID passed
-      // as part of post rather than a separate attribute)
       { ...post, userID: getState().auth.user.id },
       tokenConfig(getState),
     );
@@ -85,12 +83,16 @@ const unlikePost = (postID) => async (dispatch, getState) => {
   }
 };
 
-const commentPost = (postID) => async (dispatch, getState) => {
+const commentPost = (postID, comment) => async (
+  dispatch,
+  getState,
+) => {
   try {
     const res = await axios.post(
       `http://localhost:5000/api/posts/${postID}/comment/${
         getState().auth.user.id
       }`,
+      { comment },
       tokenConfig(getState),
     );
     dispatch({ type: COMMENT_POST, payload: res.data });
