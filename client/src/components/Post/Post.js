@@ -5,11 +5,18 @@ import { connect } from 'react-redux';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { VscComment } from 'react-icons/vsc';
 import { IconContext } from 'react-icons';
+import {
+  likePost,
+  unlikePost,
+  commentPost,
+  deleteComment,
+} from '../../actions/postsActions';
 import { PostProps, DefaultPostProps } from '../../types/index';
 import PostStyles from './PostStyles';
 import Comment from './Comment';
 
-const Post = ({ post, likedPosts, auth }) => {
+// eslint-disable-next-line no-shadow
+const Post = ({ post, likedPosts, auth, likePost, unlikePost }) => {
   const {
     cntStyle,
     cntTop,
@@ -75,12 +82,10 @@ const Post = ({ post, likedPosts, auth }) => {
 
   const handleLike = () => {
     if (auth.isAuthenticated) {
-      // redux action
-      setLiked(!liked);
       if (liked) {
-        setLikeCount(likeCount - 1);
+        unlikePost(id);
       } else {
-        setLikeCount(likeCount + 1);
+        likePost(id);
       }
     } else {
       alert('must be logged in');
@@ -159,7 +164,9 @@ const mapStateToProps = (state) => ({
 Post.propTypes = PostProps;
 Post.defaultProps = DefaultPostProps;
 
-export default connect(mapStateToProps, {})(Post);
+export default connect(mapStateToProps, { likePost, unlikePost })(
+  Post,
+);
 
 // create routes for likes and comments separately
 // delay for liking

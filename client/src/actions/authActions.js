@@ -16,12 +16,11 @@ import {
 const loadUser = () => async (dispach, getState) => {
   // User loading
   dispach({ type: USER_LOADING });
-
   try {
     const res = await axios.get(
       // dev http://localhost:5000/api/user
       // build api/dev
-      'http://localhost:5000/api/user',
+      'http://localhost:5000/api/user/',
       tokenConfig(getState),
     );
     if (!res) throw new Error();

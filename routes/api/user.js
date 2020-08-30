@@ -138,9 +138,9 @@ router.post('/register', regController);
 // @access  Public
 router.post('/login', loginController);
 
-// @route   GET api/user
+// @route   GET api/user/:userID
 // @desc    Get user data
 // @access  Private
-router.get('/:userID', auth, dataController);
+router.get('/', auth, dataController);
 
 module.exports = router;

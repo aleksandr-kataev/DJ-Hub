@@ -116,7 +116,7 @@ const likeController = async (req, res) => {
       throw new HTTPError('user_not_found', 400);
     }
 
-    return res.status(200).json({ modified: true });
+    return res.status(200).json({ modified: true, postID });
   } catch (err) {
     return res
       .status(err.code)
@@ -149,7 +149,7 @@ const unlikeController = async (req, res) => {
       throw new HTTPError('user_not_found', 400);
     }
 
-    return res.status(200).json({ modified: true });
+    return res.status(200).json({ modified: true, postID });
   } catch (err) {
     return res
       .status(err.code)

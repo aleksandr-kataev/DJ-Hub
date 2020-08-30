@@ -28,11 +28,13 @@ const addPost = (post) => async (dispatch, getState) => {
   try {
     const res = await axios.post(
       'http://localhost:5000/api/posts',
+      // might result in wrong object (userID passed
+      // as part of post rather than a separate attribute)
       { ...post, userID: getState().auth.user.id },
       tokenConfig(getState),
     );
-    await dispatch({ type: ADD_POST, payload: res.data });
-    loadUser();
+    dispatch({ type: ADD_POST, payload: res.data });
+    dispatch(loadUser());
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
@@ -54,14 +56,15 @@ const deletePost = (postID) => async (dispatch, getState) => {
 
 const likePost = (postID) => async (dispatch, getState) => {
   try {
-    const res = await axios.delete(
+    const res = await axios.post(
       `http://localhost:5000/api/posts/${postID}/like/${
         getState().auth.user.id
       }`,
+      {},
       tokenConfig(getState),
     );
-    await dispatch({ type: LIKE_POST, payload: res.data });
-    loadUser();
+    dispatch({ type: LIKE_POST, payload: res.data });
+    dispatch(loadUser());
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
@@ -75,8 +78,8 @@ const unlikePost = (postID) => async (dispatch, getState) => {
       }`,
       tokenConfig(getState),
     );
-    await dispatch({ type: UNLIKE_POST, payload: res.data });
-    loadUser();
+    dispatch({ type: UNLIKE_POST, payload: res.data });
+    dispatch(loadUser());
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
@@ -84,13 +87,14 @@ const unlikePost = (postID) => async (dispatch, getState) => {
 
 const commentPost = (postID) => async (dispatch, getState) => {
   try {
-    const res = await axios.delete(
+    const res = await axios.post(
       `http://localhost:5000/api/posts/${postID}/comment/${
         getState().auth.user.id
       }`,
       tokenConfig(getState),
     );
     dispatch({ type: COMMENT_POST, payload: res.data });
+    dispatch(loadUser());
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
@@ -106,6 +110,7 @@ const deleteComment = (postID, commentID) => async (
       tokenConfig(getState),
     );
     dispatch({ type: DELETE_COMMENT, payload: res.data });
+    dispatch(loadUser());
   } catch (e) {
     dispatch(returnErrors(e.response.data, e.response.status));
   }
