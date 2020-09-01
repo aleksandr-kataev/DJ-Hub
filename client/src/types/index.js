@@ -5,7 +5,6 @@ import {
   arrayOf,
   bool,
   func,
-  date,
 } from 'prop-types';
 
 export const MenuProps = {
@@ -94,7 +93,7 @@ export const DiscoverProps = {
           shape({
             userID: string,
             comment: string,
-            date,
+            date: string,
           }),
         ),
         title: string,
@@ -122,7 +121,7 @@ export const PostProps = {
       shape({
         userID: string,
         comment: string,
-        date,
+        date: string,
       }),
     ),
     title: string,
@@ -136,4 +135,19 @@ export const PostProps = {
 export const DefaultPostProps = {
   post: {},
   likedPosts: [],
+};
+
+export const LikeProps = {
+  numOfLikes: number.isRequired,
+  liked: bool.isRequired,
+  id: string.isRequired,
+};
+
+export const CommentIconProps = {
+  handleOpenComment: func.isRequired,
+  commentCount: number.isRequired,
+};
+
+export const PostDateProps = {
+  datePosted: string.isRequired,
 };

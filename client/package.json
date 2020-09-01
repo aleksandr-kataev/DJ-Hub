@@ -7,24 +7,28 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "axios": "^0.19.2",
+    "babel-plugin-macros": "^2.8.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "react-icons": "^3.11.0",
     "react-player": "^2.6.1",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
+    "react-transition-group": "^4.4.1",
+    "react-useanimations": "^2.0.5",
     "redux": "^4.0.5",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "styled-components": "^5.1.1",
+    "tailwind.macro": "^1.0.0-alpha.10"
   },
   "scripts": {
+    "build:css": "postcss src/tailwind.css -o src/index.css",
+    "watch:css": "postcss src/tailwind.css -o src/index.css",
     "start": "npm run watch:css & react-scripts start",
     "build": "npm run build:css react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "build:css": "postcss src/tailwind.css -o src/index.css",
-    "watch:css": "postcss src/tailwind.css -o src/index.css"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -43,13 +47,13 @@
   },
   "devDependencies": {
     "autoprefixer": "^9.8.6",
-    "eslint": "^7.6.0",
+    "eslint": "^7.8.0",
     "eslint-config-airbnb": "^18.2.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.5",
-    "eslint-plugin-react-hooks": "^4.0.8",
-    "postcss-cli": "^7.1.1",
-    "tailwindcss": "^1.6.2"
+    "eslint-plugin-react-hooks": "^4.1.0",
+    "postcss-cli": "^7.1.2",
+    "tailwindcss": "^1.7.6"
   }
 }
