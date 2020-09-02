@@ -2,13 +2,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
-import UseAnimations from 'react-useanimations';
-import heart from 'react-useanimations/lib/heart';
+import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
+import { IconContext } from 'react-icons';
 import { likePost, unlikePost } from '../../actions/postsActions';
 import { LikeProps } from '../../types/index';
 
 const LikeStyled = styled.div.attrs({
-  className: 'flex mr-6',
+  className: 'flex mr-6 hover:opacity-70 cursor-pointer',
 })``;
 
 const Like = (props) => {
@@ -35,12 +35,16 @@ const Like = (props) => {
 
   return (
     <LikeStyled>
-      <UseAnimations
-        animation={heart}
-        onClick={handleLike}
-        size={25}
-        reverse={isAuthenticated}
-      />
+      {liked ? (
+        <IconContext.Provider value={{ color: 'red', size: '24px' }}>
+          <AiFillHeart onClick={handleLike} />
+        </IconContext.Provider>
+      ) : (
+        <IconContext.Provider value={{ color: 'red', size: '24px' }}>
+          <AiOutlineHeart onClick={handleLike} />
+        </IconContext.Provider>
+      )}
+
       <span className='flex ml-2'>{likeCount}</span>
     </LikeStyled>
   );
