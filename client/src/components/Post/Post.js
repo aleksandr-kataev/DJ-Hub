@@ -4,7 +4,7 @@ import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
 import tw from 'tailwind.macro';
-import { useSpring, animated } from 'react-spring';
+import { useSpring, animated as a } from 'react-spring';
 
 import {
   commentPost,
@@ -34,16 +34,19 @@ const Post = ({ post, likedPosts }) => {
     player,
   } = PostStyles;
   const { id, title, date, numOfLikes, comments, link, tag } = post;
-  const props = useSpring({ opacity: 1, from: { opacity: 0 } });
-  const [openComments, setOpenComments] = useState(false);
 
+  const [openComments, setOpenComments] = useState(false);
+  const props = useSpring({ opacity: 1, from: { opacity: 0 } });
+  const commentsProps = useSpring({
+    opacity: openComments ? 1 : 0,
+    marginTop: openComments ? 0 : -100,
+  });
   const handleOpenComments = () => {
     setOpenComments(!openComments);
-    alert('clikced');
   };
 
   return (
-    <animated.div style={props}>
+    <a.div style={props}>
       <div className={cntStyle}>
         <div className={cntTop}>
           <span>{title}</span>
@@ -73,17 +76,15 @@ const Post = ({ post, likedPosts }) => {
           <PostDate datePosted={date} />
         </div>
 
-        <div
-          className={
-            openComments ? cntCommentsOpened : cntCommentsClosed
-          }
-        >
-          {comments.map((comment) => (
-            <Comment comment={comment} />
-          ))}
-        </div>
+        {openComments && (
+          <a.div className='comments' style={commentsProps}>
+            {comments.map((comment) => (
+              <Comment comment={comment} />
+            ))}
+          </a.div>
+        )}
       </div>
-    </animated.div>
+    </a.div>
   );
 };
 

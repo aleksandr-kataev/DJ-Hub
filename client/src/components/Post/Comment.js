@@ -6,7 +6,7 @@ const CommentStyle = {
 };
 
 const Comment = (comment) => (
-  <div className={CommentStyle.cntLike}>{comment}</div>
+  <div className={CommentStyle.cntLike}>{comment.comment}</div>
 );
 
 export default Comment;
