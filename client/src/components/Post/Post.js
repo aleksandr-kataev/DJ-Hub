@@ -39,7 +39,6 @@ const Post = ({ post, likedPosts }) => {
   const props = useSpring({ opacity: 1, from: { opacity: 0 } });
   const commentsProps = useSpring({
     opacity: openComments ? 1 : 0,
-    marginTop: openComments ? 0 : -100,
   });
   const handleOpenComments = () => {
     setOpenComments(!openComments);
