@@ -5,7 +5,7 @@ const dbHandler = require('../../db_handler');
 afterAll(() => dbHandler.closeDatabase());
 
 let token;
-let userID;
+let username;
 
 beforeAll((done) => {
   request(app)
@@ -16,7 +16,7 @@ beforeAll((done) => {
       password: '12345',
     })
     .end((err, res) => {
-      userID = res.body.user.id;
+      username = res.body.user.username;
       token = res.body.token;
       done();
     });
@@ -30,7 +30,7 @@ describe('/POST', () => {
       .set({ 'x-auth-token': token })
       .send({
         title: 'example mix',
-        userID,
+        username,
         link: 'test.com',
         tag: 'test',
       });
@@ -40,7 +40,7 @@ describe('/POST', () => {
   it('It should require authorization', async () => {
     const res = await request(app).post('/api/posts').send({
       title: 'example mix',
-      userID,
+      username,
       link: 'test.com1',
       tag: 'test',
     });

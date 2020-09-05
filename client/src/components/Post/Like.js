@@ -25,7 +25,7 @@ const Like = ({
     from: { position: 'absolute', opacity: 0 },
     enter: { position: 'flex', opacity: 1 },
     leave: { opacity: 0 },
-    config: { duration: 500 },
+    config: { duration: 250 },
   });
 
   const [disabled, setDisabled] = useState(false);
@@ -33,7 +33,7 @@ const Like = ({
   const handleLike = (e) => {
     e.preventDefault();
     setDisabled(true);
-    setTimeout(() => setDisabled(false), 500);
+    setTimeout(() => setDisabled(false), 250);
     if (isAuthenticated) {
       if (liked) {
         unlikePost(id);
@@ -98,4 +98,3 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, { likePost, unlikePost })(
   Like,
 );
-// https://www.youtube.com/watch?v=z3oHmGVB4K0

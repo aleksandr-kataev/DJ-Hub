@@ -28,7 +28,7 @@ const addPost = (post) => async (dispatch, getState) => {
   try {
     const res = await axios.post(
       'http://localhost:5000/api/posts',
-      { ...post, userID: getState().auth.user.id },
+      { ...post, username: getState().auth.user.username },
       tokenConfig(getState),
     );
     dispatch({ type: ADD_POST, payload: res.data });
@@ -41,8 +41,7 @@ const addPost = (post) => async (dispatch, getState) => {
 const deletePost = (postID) => async (dispatch, getState) => {
   try {
     const res = await axios.delete(
-      'http://localhost:5000/api/posts',
-      { postID, userID: getState().auth.user.id },
+      `http://localhost:5000/api/posts/${postID}`,
       tokenConfig(getState),
     );
 
@@ -55,9 +54,7 @@ const deletePost = (postID) => async (dispatch, getState) => {
 const likePost = (postID) => async (dispatch, getState) => {
   try {
     const res = await axios.post(
-      `http://localhost:5000/api/posts/${postID}/like/${
-        getState().auth.user.id
-      }`,
+      `http://localhost:5000/api/posts/${postID}/like`,
       {},
       tokenConfig(getState),
     );
@@ -71,9 +68,7 @@ const likePost = (postID) => async (dispatch, getState) => {
 const unlikePost = (postID) => async (dispatch, getState) => {
   try {
     const res = await axios.delete(
-      `http://localhost:5000/api/posts/${postID}/unlike/${
-        getState().auth.user.id
-      }`,
+      `http://localhost:5000/api/posts/${postID}/unlike/`,
       tokenConfig(getState),
     );
     dispatch({ type: UNLIKE_POST, payload: res.data });
@@ -90,7 +85,7 @@ const commentPost = (postID, comment) => async (
   try {
     const res = await axios.post(
       `http://localhost:5000/api/posts/${postID}/comment/${
-        getState().auth.user.id
+        getState().auth.user.username
       }`,
       { comment },
       tokenConfig(getState),

@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
+import { useMeasure } from 'react-use';
 import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
 import styled from 'styled-components';
@@ -33,16 +34,41 @@ const Post = ({ post, likedPosts }) => {
     cntPlayer,
     player,
   } = PostStyles;
-  const { id, title, date, numOfLikes, comments, link, tag } = post;
+  const {
+    id,
+    username,
+    title,
+    date,
+    numOfLikes,
+    comments,
+    link,
+    tag,
+  } = post;
 
   const [openComments, setOpenComments] = useState(false);
+  const [commentHeight, setCommentHeight] = useState(0);
+  const [ref, { height }] = useMeasure();
+
+  // react-spring props
   const props = useSpring({ opacity: 1, from: { opacity: 0 } });
   const commentsProps = useSpring({
-    opacity: openComments ? 1 : 0,
+    height: openComments ? `${commentHeight}px` : '0px',
   });
+
   const handleOpenComments = () => {
     setOpenComments(!openComments);
   };
+
+  useEffect(() => {
+    setCommentHeight(height);
+
+    window.addEventListener('resize', setCommentHeight(height));
+
+    return window.removeEventListener(
+      'resize',
+      setCommentHeight(height),
+    );
+  });
 
   return (
     <a.div style={props}>
@@ -75,13 +101,13 @@ const Post = ({ post, likedPosts }) => {
           <PostDate datePosted={date} />
         </div>
 
-        {openComments && (
-          <a.div className='comments' style={commentsProps}>
+        <a.div className='comments' style={commentsProps}>
+          <div ref={ref}>
             {comments.map((comment) => (
               <Comment comment={comment} />
             ))}
-          </a.div>
-        )}
+          </div>
+        </a.div>
       </div>
     </a.div>
   );

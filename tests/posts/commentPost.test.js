@@ -5,7 +5,7 @@ const dbHandler = require('../../db_handler');
 afterAll(() => dbHandler.closeDatabase());
 
 let token;
-let userID;
+let username;
 let postID;
 let commentID;
 
@@ -19,20 +19,20 @@ beforeAll((done) => {
     })
     .end((regErr, regRes) => {
       token = regRes.body.token;
-      userID = regRes.body.user.id;
+      username = regRes.body.user.username;
       request(app)
         .post('/api/posts')
         .set({ 'x-auth-token': token })
         .send({
           title: 'example mix',
-          userID,
+          username,
           link: 'test.com',
           tag: 'test',
         })
         .end((postErr, postRes) => {
           postID = postRes.body.response.id;
           request(app)
-            .post(`/api/posts/${postID}/comment/${userID}`)
+            .post(`/api/posts/${postID}/comment/${username}`)
             .set({ 'x-auth-token': token })
             .send({ comment: 'Test comment' })
             .end((commentErr, commentRes) => {
@@ -46,21 +46,21 @@ beforeAll((done) => {
 describe('/POST ', () => {
   it('Should return JSON with {modified: true}', async () => {
     const res = await request(app)
-      .post(`/api/posts/${postID}/comment/${userID}`)
+      .post(`/api/posts/${postID}/comment/${username}`)
       .send({ comment: 'First comment' })
       .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(200);
   });
   it('Should return 401 as no token is passed', async () => {
     const res = await request(app)
-      .post(`/api/posts/${postID}/comment/${userID}`)
+      .post(`/api/posts/${postID}/comment/${username}`)
       .send({ comment: 'First comment' });
     expect(res.statusCode).toEqual(401);
   });
 
   it('Should return a 400 as the postID does not exist in the DB', async () => {
     const res = await request(app)
-      .post(`/api/posts/wrongPostID/comment/${userID}`)
+      .post(`/api/posts/wrongPostID/comment/${username}`)
       .send({ comment: 'First comment' })
       .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(400);

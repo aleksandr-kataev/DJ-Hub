@@ -16,11 +16,10 @@ const PostSchema = new Schema({
     type: Date,
     default: new Date(),
   },
-  userID: {
+  username: {
     type: String,
     required: true,
   },
-
   numOfLikes: {
     type: Number,
     default: 0,

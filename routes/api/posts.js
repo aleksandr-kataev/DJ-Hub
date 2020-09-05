@@ -22,11 +22,11 @@ const getPostsController = async (req, res) => {
 };
 
 const postPostController = async (req, res) => {
-  const { title, userID, link, tag } = req.body;
+  const { title, username, link, tag } = req.body;
   try {
     const newPost = new Post({
       title,
-      userID,
+      username,
       link,
       tag,
     });
@@ -34,7 +34,7 @@ const postPostController = async (req, res) => {
     if (!response) throw new HTTPError('.save()_failed', 500); /// new HTTP ERROR
 
     const user = await User.findOneAndUpdate(
-      { id: userID },
+      { username },
       {
         $push: {
           posts: response.id,
@@ -48,6 +48,7 @@ const postPostController = async (req, res) => {
     if (err.code === 11000) {
       return res.status(400).json({ err: 'link_taken' });
     }
+    if (!err.code) return err;
     return res
       .status(err.code)
       .json({ msg: err.message, modified: false });
@@ -55,20 +56,30 @@ const postPostController = async (req, res) => {
 };
 
 const deletePostController = async (req, res) => {
-  const { postID, userID } = req.params;
+  const { id } = req.user;
+  const { postID } = req.params;
+
   try {
+    const postExists = await Post.exists({ id: postID });
+    if (!postExists) throw new HTTPError('Record not removed', 400);
+
+    const userExists = await User.exists({ id });
+    if (!userExists) {
+      throw new HTTPError('User record not found', 400);
+    }
+
     const removed = await Post.remove({ id: postID });
     if (!removed || removed.n === 0) {
-      throw new HTTPError('Record not removed', 400);
+      throw new HTTPError('Record not removed', 500);
     }
 
     const user = await User.updateOne(
-      { id: userID },
+      { id },
       { $pull: { posts: postID } },
       { safe: true, multi: true },
     );
     if (!user) {
-      throw new HTTPError('User record not updated', 400);
+      throw new HTTPError('User record not updated', 500);
     }
 
     const usersLiked = await User.updateMany(
@@ -76,6 +87,7 @@ const deletePostController = async (req, res) => {
       { $pull: { likedPosts: postID } },
       { safe: true, multi: true },
     );
+
     if (!usersLiked) {
       throw new HTTPError(
         'Users liked the post failed to updated',
@@ -92,19 +104,28 @@ const deletePostController = async (req, res) => {
 };
 
 const likeController = async (req, res) => {
-  const { userID, postID } = req.params;
+  const { id } = req.user;
+  const { postID } = req.params;
   try {
+    const postExists = await Post.exists({ id: postID });
+    if (!postExists) throw new HTTPError('Record not removed', 400);
+
+    const userExists = await User.exists({ id });
+    if (!userExists) {
+      throw new HTTPError('User record not found', 400);
+    }
+
     const post = await Post.findOneAndUpdate(
       { id: postID },
       { $inc: { numofLikes: 1 } },
       { new: true },
     );
     if (!post) {
-      throw new HTTPError('post_not_found', 400);
+      throw new HTTPError('post_not_found', 500);
     }
 
     const user = await User.findOneAndUpdate(
-      { id: userID },
+      { id },
       {
         $push: {
           likedPosts: postID,
@@ -113,7 +134,7 @@ const likeController = async (req, res) => {
       { new: true },
     );
     if (!user) {
-      throw new HTTPError('user_not_found', 400);
+      throw new HTTPError('user_not_found', 500);
     }
 
     return res.status(200).json({ modified: true, postID });
@@ -125,7 +146,8 @@ const likeController = async (req, res) => {
 };
 
 const unlikeController = async (req, res) => {
-  const { userID, postID } = req.params;
+  const { id } = req.user;
+  const { postID } = req.params;
   try {
     const post = await Post.findOneAndUpdate(
       { id: postID },
@@ -137,7 +159,7 @@ const unlikeController = async (req, res) => {
     }
 
     const user = await User.findOneAndUpdate(
-      { id: userID },
+      { id },
       {
         $pull: {
           likedPosts: postID,
@@ -158,12 +180,12 @@ const unlikeController = async (req, res) => {
 };
 
 const commentController = async (req, res) => {
-  const { userID, postID } = req.params;
+  const { username, postID } = req.params;
   const { comment } = req.body;
   const commentObj = {
     commentID: uuid.v4(),
     comment,
-    user: userID,
+    username,
     date: Date.now,
   };
   try {
@@ -226,22 +248,22 @@ router.post('/', auth, postPostController);
 // @route   DELETE api/posts/
 // @desc    Delete post
 // @access  Private
-router.delete('/:postID/:userID', auth, deletePostController);
+router.delete('/:postID/', auth, deletePostController);
 
-// @route   POST api/posts/:postID/like/:userID
+// @route   POST api/posts/:postID/like/
 // @desc    Like a post
 // @access  Private
-router.post('/:postID/like/:userID', auth, likeController);
+router.post('/:postID/like/', auth, likeController);
 
-// @route   DELETE api/posts/:postID/unlike/:userID
+// @route   DELETE api/posts/:postID/unlike/
 // @desc    Unlike a post
 // @access  Private
-router.delete('/:postID/unlike/:userID', auth, unlikeController);
+router.delete('/:postID/unlike/', auth, unlikeController);
 
-// @route   POST api/posts/:postID/comment/:userID
+// @route   POST api/posts/:postID/comment/
 // @desc    Comment on a post
 // @access  Private
-router.post('/:postID/comment/:userID', auth, commentController);
+router.post('/:postID/comment/:username', auth, commentController);
 
 // @route   DELETE api/posts/:postID/delComment
 // @desc    Delete a comment on a post

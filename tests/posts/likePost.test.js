@@ -5,7 +5,7 @@ const dbHandler = require('../../db_handler');
 afterAll(() => dbHandler.closeDatabase());
 
 let token;
-let userID;
+let username;
 let postID;
 
 beforeAll((done) => {
@@ -18,13 +18,13 @@ beforeAll((done) => {
     })
     .end((regErr, regRes) => {
       token = regRes.body.token;
-      userID = regRes.body.user.id;
+      username = regRes.body.user.username;
       request(app)
         .post('/api/posts')
         .set({ 'x-auth-token': token })
         .send({
           title: 'example mix',
-          userID,
+          username,
           link: 'test.com',
           tag: 'test',
         })
@@ -36,46 +36,45 @@ beforeAll((done) => {
 });
 
 describe('/POST ', () => {
-  it('Should return JSON with {modified: true}', async () => {
-    const res = await request(app)
-      .post(`/api/posts/${postID}/like/${userID}`)
-      .set({ 'x-auth-token': token });
-    expect(res.statusCode).toEqual(200);
-  });
   it('Should return 401 as no token is passed', async () => {
-    const res = await request(app).post(
-      `/api/posts/${postID}/like/${userID}`,
-    );
+    const res = await request(app).post(`/api/posts/${postID}/like`);
     expect(res.statusCode).toEqual(401);
   });
 
   it('Should return a 400 as the postID does not exist in the DB', async () => {
     const res = await request(app)
-      .post(`/api/posts/wrongPostID/like/${userID}`)
+      .post('/api/posts/wrongPostID/like')
       .set({ 'x-auth-token': token });
-
     expect(res.statusCode).toEqual(400);
+  });
+
+  it('Should return JSON with {modified: true}', async () => {
+    const res = await request(app)
+      .post(`/api/posts/${postID}/like`)
+      .set({ 'x-auth-token': token });
+    expect(res.statusCode).toEqual(200);
   });
 });
 
 describe('/DELETE ', () => {
-  it('Should return JSON with {modified: true}', async () => {
-    const res = await request(app)
-      .delete(`/api/posts/${postID}/unlike/${userID}`)
-      .set({ 'x-auth-token': token });
-    expect(res.statusCode).toEqual(200);
-  });
   it('Should return 401 as no token is passed', async () => {
     const res = await request(app).delete(
-      `/api/posts/${postID}/unlike/${userID}`,
+      `/api/posts/${postID}/unlike`,
     );
     expect(res.statusCode).toEqual(401);
   });
 
   it('Should return a 400 as the postID does not exist in the DB', async () => {
     const res = await request(app)
-      .delete(`/api/posts/wrongPostID/unlike/${userID}`)
+      .delete('/api/posts/wrongPostID/unlike')
       .set({ 'x-auth-token': token });
     expect(res.statusCode).toEqual(400);
+  });
+
+  it('Should return JSON with {modified: true}', async () => {
+    const res = await request(app)
+      .delete(`/api/posts/${postID}/unlike`)
+      .set({ 'x-auth-token': token });
+    expect(res.statusCode).toEqual(200);
   });
 });

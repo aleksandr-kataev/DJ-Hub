@@ -17,11 +17,13 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.4.3",
     "react-spring": "^8.0.27",
+    "react-use": "^15.3.4",
     "react-useanimations": "^2.0.5",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.1",
-    "tailwind.macro": "^1.0.0-alpha.10"
+    "tailwind.macro": "^1.0.0-alpha.10",
+    "use-react": "0.0.3"
   },
   "scripts": {
     "build:css": "postcss src/tailwind.css -o src/index.css",
