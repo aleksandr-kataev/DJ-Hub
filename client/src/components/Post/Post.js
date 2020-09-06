@@ -18,7 +18,7 @@ import CommentIcon from './CommentIcon';
 import Comment from './Comment';
 import PostDate from './PostDate';
 
-const CommentCnt = styled.div.attrs({
+const PlayerCnt = styled.div.attrs({
   className: '',
 })``;
 
@@ -52,7 +52,7 @@ const Post = ({ post, likedPosts }) => {
   // react-spring props
   const props = useSpring({ opacity: 1, from: { opacity: 0 } });
   const commentsProps = useSpring({
-    height: openComments ? `${commentHeight}px` : '0px',
+    height: openComments ? `${commentHeight + 10}px` : '0px',
   });
 
   const handleOpenComments = () => {
@@ -68,23 +68,23 @@ const Post = ({ post, likedPosts }) => {
       'resize',
       setCommentHeight(height),
     );
-  });
+  }, [height]);
 
   return (
-    <a.div style={props}>
-      <div className={cntStyle}>
+    <div className={cntStyle}>
+      <a.div style={props}>
         <div className={cntTop}>
           <span>{title}</span>
           <span>{`#${tag}`}</span>
         </div>
-        <CommentCnt>
+        <PlayerCnt>
           <ReactPlayer
             className={player}
             url={link}
             width='100%'
             height='120px'
           />
-        </CommentCnt>
+        </PlayerCnt>
 
         <div className={cntBot}>
           <div className={cntLikeComment}>
@@ -101,15 +101,19 @@ const Post = ({ post, likedPosts }) => {
           <PostDate datePosted={date} />
         </div>
 
-        <a.div className='comments' style={commentsProps}>
+        <div className='my-2'>
+          <p>asd</p>
+        </div>
+
+        <a.div style={commentsProps}>
           <div ref={ref}>
             {comments.map((comment) => (
               <Comment comment={comment} />
             ))}
           </div>
         </a.div>
-      </div>
-    </a.div>
+      </a.div>
+    </div>
   );
 };
 

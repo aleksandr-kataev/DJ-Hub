@@ -248,17 +248,17 @@ router.post('/', auth, postPostController);
 // @route   DELETE api/posts/
 // @desc    Delete post
 // @access  Private
-router.delete('/:postID/', auth, deletePostController);
+router.delete('/:postID', auth, deletePostController);
 
 // @route   POST api/posts/:postID/like/
 // @desc    Like a post
 // @access  Private
-router.post('/:postID/like/', auth, likeController);
+router.post('/:postID/like', auth, likeController);
 
 // @route   DELETE api/posts/:postID/unlike/
 // @desc    Unlike a post
 // @access  Private
-router.delete('/:postID/unlike/', auth, unlikeController);
+router.delete('/:postID/unlike', auth, unlikeController);
 
 // @route   POST api/posts/:postID/comment/
 // @desc    Comment on a post
