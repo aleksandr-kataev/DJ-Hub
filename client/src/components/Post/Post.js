@@ -64,7 +64,7 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
 
   const [addComment, addSetComment] = useState('');
 
-  const [openComments, setOpenComments] = useState(true);
+  const [openComments, setOpenComments] = useState(false);
   const [commentHeight, setCommentHeight] = useState(0);
   const [ref, { height }] = useMeasure();
 
@@ -117,7 +117,7 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
             className={player}
             url={link}
             width='100%'
-            height='120px'
+            height='130px'
           />
         </PlayerCnt>
 
@@ -138,7 +138,9 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
 
         <a.div style={commentsProps}>
           <div ref={ref}>
-            <div>
+            <div
+              className={comments.length > 4 && 'overflow-auto h-40'}
+            >
               {comments.map((comment) => (
                 <Comment comment={comment} />
               ))}
