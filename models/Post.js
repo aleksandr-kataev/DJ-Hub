@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const uuid = require('uuid');
 
+const Comment = require('./Comment');
+
 const { Schema } = mongoose;
 
 const PostSchema = new Schema({
@@ -26,7 +28,7 @@ const PostSchema = new Schema({
   },
   comments: {
     type: Array,
-    default: [],
+    default: [Comment],
   },
   link: {
     type: String,

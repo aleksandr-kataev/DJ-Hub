@@ -22,8 +22,25 @@ const PlayerCnt = styled.div.attrs({
   className: '',
 })``;
 
+const AddCommentCnt = styled.div.attrs({
+  className: 'flex justify-between my-8 mx-4',
+})`
+  & {
+    input {
+      width: 80%;
+      text-indent: 10px;
+      ${tw`border border-bg-gray-600 rounded-sm`};
+    }
+    button {
+      ${tw`bg-transparent hover:bg-black text-black 
+      font-semibold hover:text-white py-1 px-5 border 
+      border-bg-gray-600 rounded focus:outline-none`}
+    }
+  }
+`;
+
 // eslint-disable-next-line no-shadow
-const Post = ({ post, likedPosts }) => {
+const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
   const {
     cntStyle,
     cntTop,
@@ -45,18 +62,36 @@ const Post = ({ post, likedPosts }) => {
     tag,
   } = post;
 
-  const [openComments, setOpenComments] = useState(false);
+  const [addComment, addSetComment] = useState('');
+
+  const [openComments, setOpenComments] = useState(true);
   const [commentHeight, setCommentHeight] = useState(0);
   const [ref, { height }] = useMeasure();
 
   // react-spring props
   const props = useSpring({ opacity: 1, from: { opacity: 0 } });
   const commentsProps = useSpring({
-    height: openComments ? `${commentHeight + 10}px` : '0px',
+    height: openComments ? `${commentHeight + 15}px` : '0px',
   });
 
   const handleOpenComments = () => {
     setOpenComments(!openComments);
+  };
+
+  const handleChangeUsername = (e) => addSetComment(e.target.value);
+  const handleAddComment = () => {
+    if (!isAuthenticated) {
+      alert('not logged in');
+      return;
+    }
+
+    if (addComment === '') {
+      alert('cant have empty comment ');
+      return;
+    }
+
+    commentPost(id, addComment);
+    addSetComment('');
   };
 
   useEffect(() => {
@@ -101,15 +136,25 @@ const Post = ({ post, likedPosts }) => {
           <PostDate datePosted={date} />
         </div>
 
-        <div className='my-2'>
-          <p>asd</p>
-        </div>
-
         <a.div style={commentsProps}>
           <div ref={ref}>
-            {comments.map((comment) => (
-              <Comment comment={comment} />
-            ))}
+            <div>
+              {comments.map((comment) => (
+                <Comment comment={comment} />
+              ))}
+            </div>
+            <AddCommentCnt>
+              <input
+                type='text'
+                name='name'
+                placeholder='Leave a comment...'
+                onChange={handleChangeUsername}
+                value={addComment}
+              />
+              <button type='button' onClick={handleAddComment}>
+                Post
+              </button>
+            </AddCommentCnt>
           </div>
         </a.div>
       </a.div>
@@ -120,9 +165,10 @@ const Post = ({ post, likedPosts }) => {
 const mapStateToProps = (state) => ({
   likedPosts:
     state.auth.user === null ? [] : state.auth.user.likedPosts,
+  isAuthenticated: state.auth.isAuthenticated,
 });
 
 Post.propTypes = PostProps;
 Post.defaultProps = DefaultPostProps;
 
-export default connect(mapStateToProps, {})(Post);
+export default connect(mapStateToProps, { commentPost })(Post);

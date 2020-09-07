@@ -151,3 +151,12 @@ export const CommentIconProps = {
 export const PostDateProps = {
   datePosted: string.isRequired,
 };
+
+export const CommentProps = {
+  comment: shape({
+    comment: string.isRequired,
+    id: string.isRequired,
+    date: string.isRequired,
+    username: string.isRequired,
+  }),
+};

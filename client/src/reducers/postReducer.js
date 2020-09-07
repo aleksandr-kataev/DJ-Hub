@@ -60,11 +60,15 @@ export default (state = initialState, action) => {
         }),
       };
     case COMMENT_POST:
+      console.log(action.payload);
       return {
         ...state,
-        post: state.posts.map((post) => {
+        posts: state.posts.map((post) => {
           if (post.id === action.payload.postID) {
-            return [...post.comments, action.payload.comment];
+            return {
+              ...post,
+              comments: [...post.comments, action.payload.comment],
+            };
           }
           return post;
         }),
@@ -72,7 +76,7 @@ export default (state = initialState, action) => {
     case DELETE_COMMENT:
       return {
         ...state,
-        post: state.posts.map((post) => {
+        posts: state.posts.map((post) => {
           if (post.id === action.payload.postID) {
             return post.comments.filter(
               (comment) => comment.id !== action.payload.commentID,

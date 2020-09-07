@@ -186,7 +186,7 @@ const commentController = async (req, res) => {
     commentID: uuid.v4(),
     comment,
     username,
-    date: Date.now,
+    date: new Date(),
   };
   try {
     const post = await Post.findOneAndUpdate(
@@ -203,7 +203,7 @@ const commentController = async (req, res) => {
     }
     return res
       .status(200)
-      .json({ modified: true, comment: commentObj });
+      .json({ modified: true, comment: commentObj, postID });
   } catch (err) {
     return res
       .status(err.code)
@@ -218,7 +218,7 @@ const delCommentController = async (req, res) => {
       { id: postID },
       {
         $pull: {
-          comments: { commentID },
+          comments: { id: commentID },
         },
       },
       { new: true },
