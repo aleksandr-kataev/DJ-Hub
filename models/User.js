@@ -29,9 +29,11 @@ const UserSchema = new Schema({
   },
   region: {
     type: String,
+    default: '',
   },
   bio: {
     type: String,
+    default: '',
   },
   likedPosts: {
     type: Array,

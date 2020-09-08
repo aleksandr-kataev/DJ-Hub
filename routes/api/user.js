@@ -15,7 +15,7 @@ const regController = async (req, res) => {
   const { username, email, password } = req.body;
   try {
     if (!username || !email || !password) {
-      throw new HTTPError('Not all fields have been entered', 400);
+      throw new HTTPError('empty_fields', 400);
     }
 
     const existingUsername = await User.findOne({
@@ -59,7 +59,7 @@ const regController = async (req, res) => {
       throw new HTTPError('jwt.sign_failed', 500);
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       token,
       user: {
         id: user.id,
@@ -70,9 +70,8 @@ const regController = async (req, res) => {
       },
     });
   } catch (err) {
-    res
-      .status(err.code)
-      .json({ err: err.message, registered: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
@@ -100,7 +99,7 @@ const loginController = async (req, res) => {
       throw new HTTPError('jwt_token_failed', 500);
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       token,
       user: {
         id: user.id,
@@ -111,20 +110,41 @@ const loginController = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(err.code).json({ err: err.message, signedIn: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
-const dataController = async (req, res) => {
+const privateUserController = async (req, res) => {
   try {
     const user = await User.findOne(
       { id: req.user.id },
       { _id: false, password: false },
     );
-    if (!user) throw Error('user_does_not_exist');
-    res.json(user);
+    if (!user) throw HTTPError('user_does_not_exist', 400);
+    return res.json(user);
   } catch (err) {
-    res.status(400).json(err);
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
+  }
+};
+
+const publicUserController = async (req, res) => {
+  try {
+    const user = await User.findOne(
+      { id: req.user.id },
+      {
+        _id: false,
+        password: false,
+        id: false,
+        email: false,
+      },
+    );
+    if (!user) throw HTTPError('user_does_not_exist', 400);
+    return res.json(user);
+  } catch (err) {
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
@@ -138,9 +158,14 @@ router.post('/register', regController);
 // @access  Public
 router.post('/login', loginController);
 
-// @route   GET api/user/:userID
+// @route   GET api/user/
 // @desc    Get user data
 // @access  Private
-router.get('/', auth, dataController);
+router.get('/', auth, privateUserController);
+
+// @route   GET api/user/:username
+// @desc    Get public user data
+// @access  Public
+router.get('/:username', publicUserController);
 
 module.exports = router;

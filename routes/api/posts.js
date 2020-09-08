@@ -17,21 +17,83 @@ const getPostsController = async (req, res) => {
     if (!posts) throw new HTTPError('.find()_failed', 500);
     return res.json(posts);
   } catch (err) {
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
+  }
+};
+
+const getUsersPostsController = async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const userExists = await User.exists({ username });
+    if (!userExists) {
+      throw new HTTPError('user_not_found', 400);
+    }
+
+    const posts = await Post.find({ username }, { _id: false }).sort({
+      date: -1,
+    });
+    if (!posts) throw new HTTPError('.find()_failed', 500);
+    return res.json(posts);
+  } catch (err) {
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
+  }
+};
+
+const getUsersLikedPostsController = async (req, res) => {
+  const { username } = req.params;
+
+  try {
+    const userExists = await User.exists({ username });
+    if (!userExists) {
+      throw new HTTPError('user_not_found', 400);
+    }
+
+    const posts = await Post.find({}, { _id: false }).sort({
+      date: -1,
+    });
+
+    if (!posts) throw new HTTPError('post.find()_failed', 500);
+
+    const user = await User.findOne(
+      { id: req.user.id },
+      'linkedPosts',
+    );
+    if (!user) throw new HTTPError('user.find()_failed', 500);
+
+    const likedPosts = posts.filter((post) => user.includes(post.id));
+
+    return res.json(likedPosts);
+  } catch (err) {
+    if (!err.code) return err;
     return res.status(err.code).json({ msg: err.message });
   }
 };
 
 const postPostController = async (req, res) => {
   const { title, username, link, tag } = req.body;
+
   try {
+    if (!title || !username || !link || !tag) {
+      throw new HTTPError('empty_fields', 400);
+    }
+
+    const userExists = await User.exists({ username });
+    if (!userExists) {
+      throw new HTTPError('user_not_found', 400);
+    }
+
     const newPost = new Post({
       title,
       username,
       link,
       tag,
     });
+
     const response = await newPost.save();
-    if (!response) throw new HTTPError('.save()_failed', 500); /// new HTTP ERROR
+    if (!response) throw new HTTPError('.save()_failed', 500);
 
     const user = await User.findOneAndUpdate(
       { username },
@@ -42,16 +104,15 @@ const postPostController = async (req, res) => {
       },
       { new: true },
     );
-    if (!user) throw new HTTPError('Failed to update', 400);
-    return res.status(200).json({ response, added: true });
+
+    if (!user) throw new HTTPError('Failed to update', 500);
+    return res.status(200).json({ response });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({ err: 'link_taken' });
     }
     if (!err.code) return err;
-    return res
-      .status(err.code)
-      .json({ msg: err.message, modified: false });
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
@@ -61,16 +122,18 @@ const deletePostController = async (req, res) => {
 
   try {
     const postExists = await Post.exists({ id: postID });
-    if (!postExists) throw new HTTPError('Record not removed', 400);
+    if (!postExists) {
+      throw new HTTPError('post_does_not_exist', 400);
+    }
 
     const userExists = await User.exists({ id });
     if (!userExists) {
-      throw new HTTPError('User record not found', 400);
+      throw new HTTPError('user_not_found', 400);
     }
 
     const removed = await Post.remove({ id: postID });
     if (!removed || removed.n === 0) {
-      throw new HTTPError('Record not removed', 500);
+      throw new HTTPError('post_not_removed', 500);
     }
 
     const user = await User.updateOne(
@@ -79,7 +142,7 @@ const deletePostController = async (req, res) => {
       { safe: true, multi: true },
     );
     if (!user) {
-      throw new HTTPError('User record not updated', 500);
+      throw new HTTPError('user_not_updated', 500);
     }
 
     const usersLiked = await User.updateMany(
@@ -89,17 +152,13 @@ const deletePostController = async (req, res) => {
     );
 
     if (!usersLiked) {
-      throw new HTTPError(
-        'Users liked the post failed to updated',
-        500,
-      );
+      throw new HTTPError('users_liked_post_failed_to_update', 500);
     }
 
     return res.status(200).json({ deleted: true });
   } catch (err) {
-    return res
-      .status(err.code)
-      .json({ msg: err.message, deleted: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
@@ -108,11 +167,11 @@ const likeController = async (req, res) => {
   const { postID } = req.params;
   try {
     const postExists = await Post.exists({ id: postID });
-    if (!postExists) throw new HTTPError('Record not removed', 400);
+    if (!postExists) throw new HTTPError('post_not_found', 400);
 
     const userExists = await User.exists({ id });
     if (!userExists) {
-      throw new HTTPError('User record not found', 400);
+      throw new HTTPError('user_ not_found', 400);
     }
 
     const post = await Post.findOneAndUpdate(
@@ -137,11 +196,10 @@ const likeController = async (req, res) => {
       throw new HTTPError('user_not_found', 500);
     }
 
-    return res.status(200).json({ modified: true, postID });
+    return res.status(200).json({ postID });
   } catch (err) {
-    return res
-      .status(err.code)
-      .json({ msg: err.message, modified: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
@@ -171,24 +229,34 @@ const unlikeController = async (req, res) => {
       throw new HTTPError('user_not_found', 400);
     }
 
-    return res.status(200).json({ modified: true, postID });
+    return res.status(200).json({ postID });
   } catch (err) {
-    return res
-      .status(err.code)
-      .json({ msg: err.message, modified: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
 const commentController = async (req, res) => {
   const { username, postID } = req.params;
   const { comment } = req.body;
-  const commentObj = {
-    commentID: uuid.v4(),
-    comment,
-    username,
-    date: new Date(),
-  };
+
   try {
+    if (!comment) throw new HTTPError('empty_comment', 400);
+
+    const postExists = await Post.exists({ id: postID });
+    if (!postExists) throw new HTTPError('post_not_found', 400);
+
+    if (!username || !postID) {
+      throw new HTTPError('username_or_postID_null', 400);
+    }
+
+    const commentObj = {
+      commentID: uuid.v4(),
+      comment,
+      username,
+      date: new Date(),
+    };
+
     const post = await Post.findOneAndUpdate(
       { id: postID },
       {
@@ -199,21 +267,25 @@ const commentController = async (req, res) => {
       { new: true },
     );
     if (!post) {
-      throw new HTTPError('Record not found', 400);
+      throw new HTTPError('post_not_updated', 500);
     }
-    return res
-      .status(200)
-      .json({ modified: true, comment: commentObj, postID });
+    return res.status(200).json({ comment: commentObj, postID });
   } catch (err) {
-    return res
-      .status(err.code)
-      .json({ msg: err.message, modified: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
 const delCommentController = async (req, res) => {
   const { postID, commentID } = req.params;
   try {
+    if (!commentID || !postID) {
+      throw new HTTPError('commentID_or_postID_null', 400);
+    }
+
+    const postExists = await Post.exists({ id: postID });
+    if (!postExists) throw new HTTPError('post_not_found', 400);
+
     const post = await Post.findOneAndUpdate(
       { id: postID },
       {
@@ -224,14 +296,13 @@ const delCommentController = async (req, res) => {
       { new: true },
     );
     if (!post) {
-      throw new HTTPError('Record not found', 400);
+      throw new HTTPError('post_not_updated', 500);
     }
 
-    return res.status(200).json({ modified: true });
+    return res.status(200).json({ deleted: true });
   } catch (err) {
-    return res
-      .status(err.code)
-      .json({ msg: err.message, modified: false });
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
   }
 };
 
@@ -239,6 +310,16 @@ const delCommentController = async (req, res) => {
 // @desc    Get all postss
 // @access  Public
 router.get('/', getPostsController);
+
+// @route   GET api/posts/:username
+// @desc    Get users posts
+// @access  Public
+router.get('/:username', getUsersPostsController);
+
+// @route   GET api/posts/liked/:username
+// @desc    Get users liked posts
+// @access  Public
+router.get('/liked/:username', getUsersLikedPostsController);
 
 // @route   POST api/posts
 // @desc    Add new post
