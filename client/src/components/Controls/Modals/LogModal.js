@@ -1,13 +1,20 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useSpring } from 'react-spring';
 import {
   LogModalProps,
   DefaultLogModalProps,
 } from '../../../types/index';
 import { login } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
-import ModalStyles from './ModalStyle';
+import {
+  Background,
+  Modal,
+  Heading,
+  SubmitButton,
+  ErrorMessage,
+} from './ModalStyles';
 
 const LogModal = ({
   showLogModal,
@@ -21,19 +28,16 @@ const LogModal = ({
   const [password, setPassword] = useState(null);
   const [errMsg, setErrMsg] = useState(null);
 
-  const {
-    bg,
-    modal,
-    heading,
-    label,
-    input,
-    submit,
-    err,
-    errMessage,
-  } = ModalStyles;
-
   const handleChangeUsername = (e) => setUsername(e.target.value);
   const handleChangePassword = (e) => setPassword(e.target.value);
+
+  const fadeAnimation = useSpring({
+    opacity: showLogModal ? 1 : 0,
+  });
+
+  const modalAnimation = useSpring({
+    transform: showLogModal ? 'translateY(0)' : 'translateY(-200%)',
+  });
 
   const handleCloseLogModal = () => {
     clearErrors();
@@ -65,14 +69,13 @@ const LogModal = ({
     return null;
   }
   return (
-    <div className={bg}>
-      <div className={modal}>
-        <p className={heading}>Login</p>
+    <Background style={fadeAnimation}>
+      <Modal style={modalAnimation}>
+        <Heading>Login</Heading>
         <form>
-          <label htmlFor='username' className={label}>
+          <label htmlFor='username'>
             Username
             <input
-              className={input}
               type='text'
               id='username'
               name='username'
@@ -80,10 +83,9 @@ const LogModal = ({
               onChange={handleChangeUsername}
             />
           </label>
-          <label htmlFor='password' className={label}>
+          <label htmlFor='password'>
             Password
             <input
-              className={input}
               type='password'
               id='password'
               name='password'
@@ -91,22 +93,18 @@ const LogModal = ({
               onChange={handleChangePassword}
             />
           </label>
-          <div className={err}>
-            <p className={errMessage}>{errMsg}</p>
+          <div>
+            <ErrorMessage>{errMsg}</ErrorMessage>
           </div>
         </form>
-        <button
-          type='button'
-          className={submit}
-          onClick={handleOnSumbit}
-        >
+        <SubmitButton type='button' onClick={handleOnSumbit}>
           Submit
-        </button>
+        </SubmitButton>
         <button type='button' onClick={handleCloseLogModal}>
           Close
         </button>
-      </div>
-    </div>
+      </Modal>
+    </Background>
   );
 };
 

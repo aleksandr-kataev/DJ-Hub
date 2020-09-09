@@ -14,7 +14,7 @@ const App = () => {
   useEffect(() => {
     store.dispatch(loadUser());
   }, []);
-
+  // render home as the last route so thta it rernederes if the wrong url is supolied
   return (
     <Provider store={store}>
       <Router>

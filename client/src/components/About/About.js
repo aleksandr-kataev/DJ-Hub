@@ -1,8 +1,11 @@
 import React from 'react';
-import AboutStyles from './AboutStyles';
+import styled from 'styled-components';
+// import tw from 'tailwind.macro';
 
-const About = () => (
-  <div className={AboutStyles}>Home</div>
-);
+const AboutCnt = styled.div.attrs({
+  className: '',
+})``;
+
+const About = () => <AboutCnt>Home</AboutCnt>;
 
 export default About;

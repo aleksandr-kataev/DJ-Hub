@@ -2,16 +2,24 @@
 /* eslint-disable no-shadow */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import { connect } from 'react-redux';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
-import { useTransition, animated as a } from 'react-spring';
 import { likePost, unlikePost } from '../../actions/postsActions';
 import { LikeProps } from '../../types/index';
 
-const LikeStyled = styled.div.attrs({
-  className: 'flex mr-16 hover:opacity-70 cursor-pointer',
-})``;
+const LikeStyled = styled.div`
+  ${tw`flex mr-8 hover:opacity-70 cursor-pointer`}
+  & {
+    button {
+      ${tw`flex focus:outline-none`}
+    }
+    span {
+      ${tw`ml-2`}
+    }
+  }
+`;
 
 const Like = ({
   likePost,
@@ -21,13 +29,6 @@ const Like = ({
   id,
   liked,
 }) => {
-  const transition = useTransition(liked, null, {
-    from: { position: 'absolute', opacity: 0 },
-    enter: { position: 'flex', opacity: 1 },
-    leave: { opacity: 0 },
-    config: { duration: 250 },
-  });
-
   const [disabled, setDisabled] = useState(false);
 
   const handleLike = (e) => {
@@ -47,44 +48,22 @@ const Like = ({
 
   return (
     <LikeStyled>
-      {transition.map(
-        ({ item, props }) =>
-          // eslint-disable-next-line implicit-arrow-linebreak
-          item ? (
-            <a.div style={props}>
-              <button
-                type='button'
-                className='flex focus:outline-none'
-                onClick={handleLike}
-                disabled={disabled}
-              >
-                <IconContext.Provider
-                  value={{ color: 'red', size: '24px' }}
-                >
-                  <AiFillHeart />
-                </IconContext.Provider>
-                <span className='ml-2'>{likeCount}</span>
-              </button>
-            </a.div>
-          ) : (
-            <a.div style={props}>
-              <button
-                type='button'
-                className='flex focus:outline-none'
-                onClick={handleLike}
-                disabled={disabled}
-              >
-                <IconContext.Provider
-                  value={{ color: 'red', size: '24px' }}
-                >
-                  <AiOutlineHeart />
-                </IconContext.Provider>
-                <span className='ml-2'>{likeCount}</span>
-              </button>
-            </a.div>
-          ),
-        // eslint-disable-next-line function-paren-newline
-      )}
+      <button type='button' onClick={handleLike} disabled={disabled}>
+        {liked ? (
+          <IconContext.Provider
+            value={{ color: 'red', size: '24px' }}
+          >
+            <AiFillHeart />
+          </IconContext.Provider>
+        ) : (
+          <IconContext.Provider
+            value={{ color: 'red', size: '24px' }}
+          >
+            <AiOutlineHeart />
+          </IconContext.Provider>
+        )}
+        <span>{likeCount}</span>
+      </button>
     </LikeStyled>
   );
 };

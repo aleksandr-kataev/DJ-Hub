@@ -1,10 +1,18 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { useSpring } from 'react-spring';
 import { RegModalProps, DefaultRegModalProps } from '../../../types';
-import ModalStyles from './ModalStyle';
 import { register } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
+
+import {
+  Background,
+  Modal,
+  Heading,
+  SubmitButton,
+  ErrorMessage,
+} from './ModalStyles';
 
 const RegModal = ({
   isAuthenticated,
@@ -20,23 +28,20 @@ const RegModal = ({
   const [confPassword, setConfPassword] = useState(null);
   const [errMsg, setErrMsg] = useState(null);
 
-  const {
-    bg,
-    modal,
-    heading,
-    label,
-    input,
-    submit,
-    err,
-    errMessage,
-  } = ModalStyles;
-
   const handleChangeUsername = (e) => setUsername(e.target.value);
   const handleChangeEmail = (e) => setEmail(e.target.value);
   const handleChangePassword = (e) => setPassword(e.target.value);
   const handleChangeConfPassword = (e) => {
     setConfPassword(e.target.value);
   };
+
+  const fadeAnimation = useSpring({
+    opacity: showRegModal ? 1 : 0,
+  });
+
+  const modalAnimation = useSpring({
+    transform: showRegModal ? 'translateY(0)' : 'translateY(-200%)',
+  });
 
   const handleCloseRegModal = () => {
     clearErrors();
@@ -78,14 +83,13 @@ const RegModal = ({
     return null;
   }
   return (
-    <div className={bg}>
-      <div className={modal}>
-        <p className={heading}>Register</p>
+    <Background style={fadeAnimation}>
+      <Modal style={modalAnimation}>
+        <Heading>Register</Heading>
         <form>
-          <label htmlFor='username' className={label}>
+          <label htmlFor='username'>
             Username
             <input
-              className={input}
               type='text'
               id='username'
               name='username'
@@ -93,10 +97,9 @@ const RegModal = ({
               onChange={handleChangeUsername}
             />
           </label>
-          <label htmlFor='email' className={label}>
+          <label htmlFor='email'>
             Email
             <input
-              className={input}
               type='text'
               id='email'
               name='email'
@@ -104,10 +107,9 @@ const RegModal = ({
               onChange={handleChangeEmail}
             />
           </label>
-          <label htmlFor='password' className={label}>
+          <label htmlFor='password'>
             Password
             <input
-              className={input}
               type='password'
               id='password'
               name='password'
@@ -115,10 +117,9 @@ const RegModal = ({
               onChange={handleChangePassword}
             />
           </label>
-          <label htmlFor='confPassword' className={label}>
+          <label htmlFor='confPassword'>
             Confirm password
             <input
-              className={input}
               type='password'
               id='confPassword'
               name='confPassword'
@@ -127,21 +128,15 @@ const RegModal = ({
             />
           </label>
         </form>
-        <div className={err}>
-          <p className={errMessage}>{errMsg}</p>
-        </div>
-        <button
-          type='button'
-          className={submit}
-          onClick={handleSubmit}
-        >
+        <ErrorMessage>{errMsg}</ErrorMessage>
+        <SubmitButton type='button' onClick={handleSubmit}>
           Submit
-        </button>
+        </SubmitButton>
         <button type='button' onClick={handleCloseRegModal}>
           Close
         </button>
-      </div>
-    </div>
+      </Modal>
+    </Background>
   );
 };
 

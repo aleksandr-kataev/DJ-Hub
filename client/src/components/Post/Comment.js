@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import tw from 'tailwind.macro';
 import dateDiff from './helper';
 import { CommentProps } from '../../types/index';
 
-const CommentCnt = styled.div.attrs({
-  className: 'flex justify-between my-4 mx-4',
-})``;
+const CommentCnt = styled.div`
+  ${tw`flex justify-between my-4 mx-4`}
+`;
 
 const Comment = ({ comment }) => {
   const [date, setDate] = useState(dateDiff(comment.date));

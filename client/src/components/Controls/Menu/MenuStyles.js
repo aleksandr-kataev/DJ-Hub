@@ -1,11 +1,22 @@
-const MenuStyles = {
-  menu: `flex absolute w-2/12 bg-black 
-  h-full top-0 right-0 z-20`,
-  openedMenu: 'transform translate-x-0 duration-500 ease-in-out',
-  closedMenu: 'transform translate-x-full duration-500 ease-in-out',
-  ul: 'm-auto text-sideMenu text-white',
-  li: 'my-12',
-  button: 'focus:outline-none',
-};
+import styled from 'styled-components';
+import tw from 'tailwind.macro';
+import { animated as a } from 'react-spring';
 
-export default MenuStyles;
+const MenuStyled = styled(a.div)`
+  ${tw`flex fixed w-2/12 bg-black h-full top-0 right-0 z-20`};
+
+  & {
+    ul {
+      ${tw`m-auto text-sideMenu text-white`};
+      li {
+        ${tw`my-12`};
+      }
+    }
+
+    button {
+      ${tw`focus:outline-none`};
+    }
+  }
+`;
+
+export default MenuStyled;

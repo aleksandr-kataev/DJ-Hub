@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 
-import styled from 'styled-components';
-
 import {
   DiscoverProps,
   DefaultDiscoverProps,
@@ -10,10 +8,6 @@ import {
 
 import Post from '../Post';
 import { getPosts } from '../../actions/postsActions';
-
-const AppStyles = styled.div.attrs({
-  className: '',
-})``;
 
 // eslint-disable-next-line no-shadow
 const Discover = ({ getPosts, posts }) => {
@@ -26,11 +20,11 @@ const Discover = ({ getPosts, posts }) => {
   }
 
   return (
-    <AppStyles>
+    <div className='discover'>
       {posts.posts.map((post) => (
         <Post post={post} />
       ))}
-    </AppStyles>
+    </div>
   );
 };
 

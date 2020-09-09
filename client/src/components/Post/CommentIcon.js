@@ -5,9 +5,8 @@ import { VscComment } from 'react-icons/vsc';
 import { IconContext } from 'react-icons';
 import { CommentIconProps } from '../../types/index';
 
-const CommentIconStyled = styled.div.attrs({
-  className: 'flex hover:opacity-70 cursor-pointer',
-})`
+const CommentIconStyled = styled.div`
+  ${tw`flex hover:opacity-70 cursor-pointer`}
   & {
     span {
       ${tw`ml-2`}

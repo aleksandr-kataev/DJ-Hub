@@ -3,8 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useMeasure } from 'react-use';
 import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
-import styled from 'styled-components';
-import tw from 'tailwind.macro';
 import { useSpring, animated as a } from 'react-spring';
 
 import {
@@ -12,45 +10,20 @@ import {
   deleteComment,
 } from '../../actions/postsActions';
 import { PostProps, DefaultPostProps } from '../../types/index';
-import PostStyles from './PostStyles';
+import {
+  PostStyled,
+  Container,
+  PlayerStyled,
+  InteractionStyled,
+  AddCommentStyled,
+} from './PostStyles';
 import Like from './Like';
 import CommentIcon from './CommentIcon';
 import Comment from './Comment';
 import PostDate from './PostDate';
 
-const PlayerCnt = styled.div.attrs({
-  className: '',
-})``;
-
-const AddCommentCnt = styled.div.attrs({
-  className: 'flex justify-between my-8 mx-4',
-})`
-  & {
-    input {
-      width: 80%;
-      text-indent: 10px;
-      ${tw`border border-bg-gray-600 rounded-sm`};
-    }
-    button {
-      ${tw`bg-transparent hover:bg-black text-black 
-      font-semibold hover:text-white py-1 px-5 border 
-      border-bg-gray-600 rounded focus:outline-none`}
-    }
-  }
-`;
-
 // eslint-disable-next-line no-shadow
 const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
-  const {
-    cntStyle,
-    cntTop,
-    cntBot,
-    cntCommentsClosed,
-    cntCommentsOpened,
-    cntLikeComment,
-    cntPlayer,
-    player,
-  } = PostStyles;
   const {
     id,
     username,
@@ -106,23 +79,18 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
   }, [height]);
 
   return (
-    <div className={cntStyle}>
+    <PostStyled>
       <a.div style={props}>
-        <div className={cntTop}>
+        <Container>
           <span>{title}</span>
           <span>{`#${tag}`}</span>
-        </div>
-        <PlayerCnt>
-          <ReactPlayer
-            className={player}
-            url={link}
-            width='100%'
-            height='130px'
-          />
-        </PlayerCnt>
+        </Container>
+        <PlayerStyled>
+          <ReactPlayer url={link} width='100%' height='130px' />
+        </PlayerStyled>
 
-        <div className={cntBot}>
-          <div className={cntLikeComment}>
+        <Container>
+          <InteractionStyled>
             <Like
               likeCount={numOfLikes}
               id={id}
@@ -132,9 +100,9 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
               handleOpenComments={handleOpenComments}
               commentCount={comments.length}
             />
-          </div>
+          </InteractionStyled>
           <PostDate datePosted={date} />
-        </div>
+        </Container>
 
         <a.div style={commentsProps}>
           <div ref={ref}>
@@ -145,7 +113,7 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
                 <Comment comment={comment} />
               ))}
             </div>
-            <AddCommentCnt>
+            <AddCommentStyled>
               <input
                 type='text'
                 name='name'
@@ -156,11 +124,11 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
               <button type='button' onClick={handleAddComment}>
                 Post
               </button>
-            </AddCommentCnt>
+            </AddCommentStyled>
           </div>
         </a.div>
       </a.div>
-    </div>
+    </PostStyled>
   );
 };
 

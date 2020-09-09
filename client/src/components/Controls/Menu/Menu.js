@@ -3,80 +3,66 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { MenuProps, DefaultMenuProps } from '../../../types/index';
-import MenuStyles from './MenuStyles';
+import MenuStyled from './MenuStyles';
 import { logout } from '../../../actions/authActions';
 
 const Menu = ({
-  showMenu,
+  style,
   setShowLogModal,
   setShowRegModal,
   auth,
   logout,
 }) => {
-  const { menu, closedMenu, openedMenu, ul, li, button } = MenuStyles;
-
   const handleShowLogModal = () => setShowLogModal(true);
   const handleShowRegModal = () => setShowRegModal(true);
 
   return (
-    <div className={`${menu} ${showMenu ? openedMenu : closedMenu}`}>
+    <MenuStyled style={style}>
       {auth && auth.isAuthenticated ? (
         <>
-          <ul className={ul}>
-            <li className={li}>
+          <ul>
+            <li>
               <Link to='/'>DISCOVER</Link>
             </li>
-            <li className={li}>
+            <li>
               <Link to='/profile'>MY PROFILE</Link>
             </li>
-            <li className={li}>
+            <li>
               <Link to='/create-post'>POST</Link>
             </li>
-            <li className={li}>
-              <button
-                type='button'
-                className={button}
-                onClick={logout}
-              >
+            <li>
+              <button type='button' onClick={logout}>
                 LOGOUT
               </button>
             </li>
-            <li className={li}>
+            <li>
               <Link to='/about'>ABOUT</Link>
             </li>
           </ul>
         </>
       ) : (
         <>
-          <ul className={ul}>
-            <li className={li}>
+          <ul>
+            <li>
               <Link to='/'>Discover</Link>
             </li>
-            <li className={li}>
-              <button
-                type='button'
-                className={button}
-                onClick={handleShowLogModal}
-              >
+            <li>
+              <button type='button' onClick={handleShowLogModal}>
                 LogIn
               </button>
             </li>
-            <li className={li}>
-              <button
-                type='button'
-                className={button}
-                onClick={handleShowRegModal}
-              >
+            <li>
+              <button type='button' onClick={handleShowRegModal}>
                 Join
               </button>
             </li>
-            <li className={li}>
+            <li>
               <Link to='/about'>About</Link>
             </li>
           </ul>
         </>
       )}
-    </div>
+    </MenuStyled>
   );
 };
 
