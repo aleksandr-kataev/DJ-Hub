@@ -60,7 +60,6 @@ export default (state = initialState, action) => {
         }),
       };
     case COMMENT_POST:
-      console.log(action.payload);
       return {
         ...state,
         posts: state.posts.map((post) => {

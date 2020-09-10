@@ -92,7 +92,7 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
         <Container>
           <InteractionStyled>
             <Like
-              likeCount={numOfLikes}
+              numOfLikes={numOfLikes}
               id={id}
               liked={likedPosts.includes(id)}
             />

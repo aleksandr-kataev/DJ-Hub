@@ -83,9 +83,10 @@ export const DiscoverProps = {
         numOfLikes: number,
         comment: arrayOf(
           shape({
-            userID: string,
+            commentID: string,
             comment: string,
             date: string,
+            username: string,
           }),
         ),
         title: string,
@@ -111,9 +112,10 @@ export const PostProps = {
     numOfLikes: number,
     comments: arrayOf(
       shape({
-        userID: string,
+        commentID: string,
         comment: string,
         date: string,
+        username: string,
       }),
     ),
     title: string,
@@ -130,9 +132,16 @@ export const DefaultPostProps = {
 };
 
 export const LikeProps = {
-  likeCount: number.isRequired,
+  numOfLikes: number.isRequired,
   liked: bool.isRequired,
   id: string.isRequired,
+  unlikePost: func,
+  isAuthenticated: bool,
+};
+
+export const DefaultLikeProps = {
+  unlikePost: null,
+  isAuthenticated: null,
 };
 
 export const CommentIconProps = {

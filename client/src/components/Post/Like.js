@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai';
 import { IconContext } from 'react-icons';
 import { likePost, unlikePost } from '../../actions/postsActions';
-import { LikeProps } from '../../types/index';
+import { LikeProps, DefaultLikeProps } from '../../types/index';
 
 const LikeStyled = styled.div`
   ${tw`flex mr-8 hover:opacity-70 cursor-pointer`}
@@ -25,7 +25,7 @@ const Like = ({
   likePost,
   unlikePost,
   isAuthenticated,
-  likeCount,
+  numOfLikes,
   id,
   liked,
 }) => {
@@ -62,13 +62,14 @@ const Like = ({
             <AiOutlineHeart />
           </IconContext.Provider>
         )}
-        <span>{likeCount}</span>
+        <span>{numOfLikes}</span>
       </button>
     </LikeStyled>
   );
 };
 
 Like.propTypes = LikeProps;
+Like.defaultProps = DefaultLikeProps;
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
