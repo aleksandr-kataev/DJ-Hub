@@ -22,7 +22,7 @@ const Discover = ({ getPosts, posts }) => {
   return (
     <div className='discover'>
       {posts.posts.map((post) => (
-        <Post post={post} />
+        <Post key={post.id} post={post} />
       ))}
     </div>
   );

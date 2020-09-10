@@ -9,11 +9,11 @@ import {
 import { login } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
 import {
-  Background,
-  Modal,
-  Heading,
-  SubmitButton,
-  ErrorMessage,
+  BackgroundStyled,
+  ModalStyled,
+  HeadingStyled,
+  SubmitButtonStyled,
+  ErrorMessageStyled,
 } from './ModalStyles';
 
 const LogModal = ({
@@ -69,9 +69,9 @@ const LogModal = ({
     return null;
   }
   return (
-    <Background style={fadeAnimation}>
-      <Modal style={modalAnimation}>
-        <Heading>Login</Heading>
+    <BackgroundStyled style={fadeAnimation}>
+      <ModalStyled style={modalAnimation}>
+        <HeadingStyled>Login</HeadingStyled>
         <form>
           <label htmlFor='username'>
             Username
@@ -94,17 +94,17 @@ const LogModal = ({
             />
           </label>
           <div>
-            <ErrorMessage>{errMsg}</ErrorMessage>
+            <ErrorMessageStyled>{errMsg}</ErrorMessageStyled>
           </div>
         </form>
-        <SubmitButton type='button' onClick={handleOnSumbit}>
+        <SubmitButtonStyled type='button' onClick={handleOnSumbit}>
           Submit
-        </SubmitButton>
+        </SubmitButtonStyled>
         <button type='button' onClick={handleCloseLogModal}>
           Close
         </button>
-      </Modal>
-    </Background>
+      </ModalStyled>
+    </BackgroundStyled>
   );
 };
 

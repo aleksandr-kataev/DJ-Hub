@@ -7,11 +7,11 @@ import { register } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
 
 import {
-  Background,
-  Modal,
-  Heading,
-  SubmitButton,
-  ErrorMessage,
+  BackgroundStyled,
+  ModalStyled,
+  HeadingStyled,
+  SubmitButtonStyled,
+  ErrorMessageStyled,
 } from './ModalStyles';
 
 const RegModal = ({
@@ -83,9 +83,9 @@ const RegModal = ({
     return null;
   }
   return (
-    <Background style={fadeAnimation}>
-      <Modal style={modalAnimation}>
-        <Heading>Register</Heading>
+    <BackgroundStyled style={fadeAnimation}>
+      <ModalStyled style={modalAnimation}>
+        <HeadingStyled>Register</HeadingStyled>
         <form>
           <label htmlFor='username'>
             Username
@@ -128,15 +128,15 @@ const RegModal = ({
             />
           </label>
         </form>
-        <ErrorMessage>{errMsg}</ErrorMessage>
-        <SubmitButton type='button' onClick={handleSubmit}>
+        <ErrorMessageStyled>{errMsg}</ErrorMessageStyled>
+        <SubmitButtonStyled type='button' onClick={handleSubmit}>
           Submit
-        </SubmitButton>
+        </SubmitButtonStyled>
         <button type='button' onClick={handleCloseRegModal}>
           Close
         </button>
-      </Modal>
-    </Background>
+      </ModalStyled>
+    </BackgroundStyled>
   );
 };
 

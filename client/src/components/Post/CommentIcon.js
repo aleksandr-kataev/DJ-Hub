@@ -14,17 +14,14 @@ const CommentIconStyled = styled.div`
   }
 `;
 
-const CommentIcon = (props) => {
-  const { handleOpenComments, commentCount } = props;
-  return (
-    <CommentIconStyled onClick={handleOpenComments}>
-      <IconContext.Provider value={{ color: 'black', size: '24px' }}>
-        <VscComment />
-      </IconContext.Provider>
-      <span>{commentCount}</span>
-    </CommentIconStyled>
-  );
-};
+const CommentIcon = ({ handleOpenComments, commentCount }) => (
+  <CommentIconStyled onClick={handleOpenComments}>
+    <IconContext.Provider value={{ color: 'black', size: '24px' }}>
+      <VscComment />
+    </IconContext.Provider>
+    <span>{commentCount}</span>
+  </CommentIconStyled>
+);
 
 CommentIcon.propTypes = CommentIconProps;
 

@@ -7,10 +7,7 @@ import {
   func,
 } from 'prop-types';
 
-export const MenuProps = {
-  showMenu: bool.isRequired,
-  setShowLogModal: func.isRequired,
-  setShowRegModal: func.isRequired,
+export const NavBarProps = {
   auth: shape({
     token: string,
     isAuthenticated: bool,
@@ -26,7 +23,7 @@ export const MenuProps = {
   logout: func.isRequired,
 };
 
-export const DefaultMenuProps = {
+export const DefaultNavBarProps = {
   auth: {
     token: null,
     isAuthenticated: null,
@@ -73,11 +70,6 @@ export const RegModalProps = {
 export const DefaultRegModalProps = {
   isAuthenticated: null,
   error: null,
-};
-
-export const NavBarProps = {
-  showMenu: bool.isRequired,
-  setShowMenu: func.isRequired,
 };
 
 export const DiscoverProps = {
@@ -138,13 +130,13 @@ export const DefaultPostProps = {
 };
 
 export const LikeProps = {
-  numOfLikes: number.isRequired,
+  likeCount: number.isRequired,
   liked: bool.isRequired,
   id: string.isRequired,
 };
 
 export const CommentIconProps = {
-  handleOpenComment: func.isRequired,
+  handleOpenComments: func.isRequired,
   commentCount: number.isRequired,
 };
 
@@ -155,7 +147,7 @@ export const PostDateProps = {
 export const CommentProps = {
   comment: shape({
     comment: string.isRequired,
-    id: string.isRequired,
+    commentID: string.isRequired,
     date: string.isRequired,
     username: string.isRequired,
   }),

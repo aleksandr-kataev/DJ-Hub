@@ -7,7 +7,13 @@ import {
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/authActions';
-import { Discover, Controls, About, CreatePost } from './components';
+import {
+  Discover,
+  NavBar,
+  About,
+  CreatePost,
+  Home,
+} from './components';
 import './index.css';
 
 const App = () => {
@@ -18,11 +24,12 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <Controls />
+        <NavBar />
         <Switch>
-          <Route exact path='/' component={Discover} />
+          <Route exact path='/discover' component={Discover} />
           <Route exact path='/about' component={About} />
           <Route exact path='/create-post' component={CreatePost} />
+          <Route path='/' component={Home} />
         </Switch>
       </Router>
     </Provider>

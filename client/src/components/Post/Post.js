@@ -107,10 +107,12 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
         <a.div style={commentsProps}>
           <div ref={ref}>
             <div
-              className={comments.length > 4 && 'overflow-auto h-40'}
+              className={
+                comments.length > 4 ? 'overflow-auto h-40' : undefined
+              }
             >
               {comments.map((comment) => (
-                <Comment comment={comment} />
+                <Comment key={comment.commentID} comment={comment} />
               ))}
             </div>
             <AddCommentStyled>
