@@ -1,77 +1,47 @@
 /* eslint-disable no-shadow */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { useSpring } from 'react-spring';
+import { Form, Input, Modal } from 'antd';
 import { RegModalProps, DefaultRegModalProps } from '../../../types';
 import { register } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
 
-import {
-  BackgroundStyled,
-  ModalStyled,
-  HeadingStyled,
-  SubmitButtonStyled,
-  ErrorMessageStyled,
-} from './ModalStyles';
-
 const RegModal = ({
+  showRegModal,
+  setShowRegModal,
+  clearErrors,
   isAuthenticated,
   error,
   register,
-  clearErrors,
-  showRegModal,
-  setShowRegModal,
 }) => {
-  const [username, setUsername] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [password, setPassword] = useState(null);
-  const [confPassword, setConfPassword] = useState(null);
+  const [form] = Form.useForm();
   const [errMsg, setErrMsg] = useState(null);
+  // const [disabled, setDisabled] = useState(false);
 
-  const handleChangeUsername = (e) => setUsername(e.target.value);
-  const handleChangeEmail = (e) => setEmail(e.target.value);
-  const handleChangePassword = (e) => setPassword(e.target.value);
-  const handleChangeConfPassword = (e) => {
-    setConfPassword(e.target.value);
+  const onOk = () => {
+    form.validateFields().then(async (values) => {
+      register({
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      });
+      form.resetFields();
+    });
   };
 
-  const fadeAnimation = useSpring({
-    opacity: showRegModal ? 1 : 0,
-  });
-
-  const modalAnimation = useSpring({
-    transform: showRegModal ? 'translateY(0)' : 'translateY(-200%)',
-  });
-
-  const handleCloseRegModal = () => {
+  const onCancel = () => {
+    form.resetFields();
     clearErrors();
     setShowRegModal(false);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (password !== confPassword) {
-      setErrMsg('Passwords do not match');
-      return;
-    }
-
-    const newUser = {
-      username,
-      email,
-      password,
-    };
-
-    register(newUser);
-  };
-
   useEffect(() => {
-    if (error.id === 'REGISTER_FAIL') {
-      setErrMsg(error.msg.err);
+    if (error.id === 'LOGIN_FAIL') {
+      setErrMsg(error.msg.msg);
     } else {
       setErrMsg(null);
     }
 
-    // If authenticated, close modal
     if (showRegModal) {
       if (isAuthenticated) {
         setShowRegModal(false);
@@ -79,64 +49,69 @@ const RegModal = ({
     }
   }, [error, setShowRegModal, isAuthenticated, showRegModal]);
 
-  if (!showRegModal) {
-    return null;
-  }
   return (
-    <BackgroundStyled style={fadeAnimation}>
-      <ModalStyled style={modalAnimation}>
-        <HeadingStyled>Register</HeadingStyled>
-        <form>
-          <label htmlFor='username'>
-            Username
-            <input
-              type='text'
-              id='username'
-              name='username'
-              placeholder='Username'
-              onChange={handleChangeUsername}
-            />
-          </label>
-          <label htmlFor='email'>
-            Email
-            <input
-              type='text'
-              id='email'
-              name='email'
-              placeholder='Email'
-              onChange={handleChangeEmail}
-            />
-          </label>
-          <label htmlFor='password'>
-            Password
-            <input
-              type='password'
-              id='password'
-              name='password'
-              placeholder='Password'
-              onChange={handleChangePassword}
-            />
-          </label>
-          <label htmlFor='confPassword'>
-            Confirm password
-            <input
-              type='password'
-              id='confPassword'
-              name='confPassword'
-              placeholder='Confirm password'
-              onChange={handleChangeConfPassword}
-            />
-          </label>
-        </form>
-        <ErrorMessageStyled>{errMsg}</ErrorMessageStyled>
-        <SubmitButtonStyled type='button' onClick={handleSubmit}>
-          Submit
-        </SubmitButtonStyled>
-        <button type='button' onClick={handleCloseRegModal}>
-          Close
-        </button>
-      </ModalStyled>
-    </BackgroundStyled>
+    <Modal
+      title='Register'
+      visible={showRegModal}
+      onOk={onOk}
+      onCancel={onCancel}
+      okText='Login'
+      cancelButtonProps={{ style: { display: 'none' } }}
+    >
+      <Form name='Register' form={form}>
+        <Form.Item
+          label='Email'
+          name='email'
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your email',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+        <Form.Item
+          label='Username'
+          name='username'
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your username',
+            },
+          ]}
+        >
+          <Input />
+        </Form.Item>
+
+        <Form.Item
+          label='Password'
+          name='password'
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your password',
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item
+          label='Confirm password'
+          name='confpassword'
+          rules={[
+            {
+              required: true,
+              message: 'Please enter your password confirmation',
+            },
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
+        <span style={{ text: 'black' }}>{errMsg}</span>
+      </Form>
+    </Modal>
   );
 };
 

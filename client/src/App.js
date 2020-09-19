@@ -7,14 +7,8 @@ import {
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/authActions';
-import {
-  Discover,
-  NavBar,
-  About,
-  CreatePost,
-  Home,
-} from './components';
-import './index.css';
+import { Discover, About, CreatePost, Home } from './components';
+import 'antd/dist/antd.css';
 
 const App = () => {
   useEffect(() => {
@@ -24,7 +18,6 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
-        <NavBar />
         <Switch>
           <Route exact path='/discover' component={Discover} />
           <Route exact path='/about' component={About} />

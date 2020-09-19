@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import tw from 'tailwind.macro';
+import { useEffect, useState } from 'react';
 import dateDiff from './helper';
 import { CommentProps } from '../../types/index';
 
-const CommentCnt = styled.div`
-  ${tw`flex justify-between my-4 mx-4`}
-`;
-
 const Comment = ({ comment }) => {
   const [date, setDate] = useState(dateDiff(comment.date));
-
+  console.log(date);
   useEffect(() => {
     const check = setInterval(() => {
       setDate(dateDiff(comment.date));
@@ -18,12 +12,7 @@ const Comment = ({ comment }) => {
     return () => clearInterval(check);
   });
 
-  return (
-    <CommentCnt>
-      <p>{comment.comment}</p>
-      <p>{date}</p>
-    </CommentCnt>
-  );
+  return null;
 };
 
 Comment.propTypes = CommentProps;

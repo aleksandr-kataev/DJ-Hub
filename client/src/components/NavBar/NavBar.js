@@ -1,131 +1,76 @@
 /* eslint-disable no-shadow */
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { IconContext } from 'react-icons';
+import { Menu } from 'antd';
+
 import { connect } from 'react-redux';
 import { logout } from '../../actions/authActions';
 import { NavBarProps, DefaultNavBarProps } from '../../types/index';
-import {
-  NavBarStyled,
-  LogoStyled,
-  BurgerButtonStyled,
-  LinkContainerStyled,
-  NavLinkStyled,
-} from './NavBarStyles';
-import LogModal from './Modals/LogModal';
+
+import LoginModal from './Modals/LoginModal';
 import RegModal from './Modals/RegModal';
+import './NavBar.css';
 
 const NavBar = ({ auth, logout }) => {
-  const [showLogModal, setShowLogModal] = useState(false);
+  const { SubMenu } = Menu;
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const [showRegModal, setShowRegModal] = useState(false);
-  const [showSideMenu, setShowSideMenu] = useState(false);
-
-  const LoggedOut = (
-    <nav>
-      <ul>
-        <li>
-          <Link to='discover'>
-            <NavLinkStyled>
-              <p>Discover</p>
-            </NavLinkStyled>
-          </Link>
-        </li>
-        <li>
-          <Link to='categories'>
-            <NavLinkStyled>
-              <p>Categories</p>
-            </NavLinkStyled>
-          </Link>
-        </li>
-        <li>
-          <button onClick={() => setShowLogModal(true)} type='button'>
-            <NavLinkStyled>
-              <p>Login</p>
-            </NavLinkStyled>
-          </button>
-        </li>
-        <li>
-          <button onClick={() => setShowRegModal(true)} type='button'>
-            <NavLinkStyled>
-              <p>Join</p>
-            </NavLinkStyled>
-          </button>
-        </li>
-      </ul>
-    </nav>
-  );
-
-  const LoggedIn = (
-    <nav>
-      <ul>
-        <li>
-          <Link to='discover'>
-            <NavLinkStyled>
-              <p>Discover</p>
-            </NavLinkStyled>
-          </Link>
-        </li>
-        <li>
-          <Link to='categories'>
-            <NavLinkStyled>
-              <p>Categories</p>
-            </NavLinkStyled>
-          </Link>
-        </li>
-        <li>
-          <Link to='post'>
-            <NavLinkStyled>
-              <p>Post</p>
-            </NavLinkStyled>
-          </Link>
-        </li>
-        <li>
-          <Link to='user'>
-            <NavLinkStyled>
-              <p>My account</p>
-            </NavLinkStyled>
-          </Link>
-        </li>
-        <li>
-          <button onClick={logout} type='button'>
-            <NavLinkStyled>
-              <p>Logout</p>
-            </NavLinkStyled>
-          </button>
-        </li>
-      </ul>
-    </nav>
-  );
 
   return (
     <>
-      <NavBarStyled>
-        <LogoStyled>
-          <Link to='/'>
-            <p>DJ HUB</p>
-          </Link>
-        </LogoStyled>
-        <BurgerButtonStyled>
-          <IconContext.Provider
-            value={{ color: 'white', size: '24px' }}
-          >
-            <GiHamburgerMenu
-              onClick={() => setShowSideMenu(!showSideMenu)}
-            />
-          </IconContext.Provider>
-        </BurgerButtonStyled>
-        <LinkContainerStyled showSideMenu={showSideMenu}>
-          {auth && auth.isAuthenticated ? LoggedIn : LoggedOut}
-        </LinkContainerStyled>
-      </NavBarStyled>
-      <LogModal
-        showLogModal={showLogModal}
-        setShowLogModal={setShowLogModal}
-      />
+      <div className='nav'>
+        <div className='logo'>
+          <span>DJHUB</span>
+        </div>
+        {auth && auth.isAuthenticated ? (
+          <Menu theme='dark' mode='horizontal'>
+            <Menu.Item style={{ marginRight: '2rem' }}>
+              Discover
+            </Menu.Item>
+            <Menu.Item style={{ marginRight: '2rem' }}>
+              Categories
+            </Menu.Item>
+            <SubMenu key='SubMenu' title='My account'>
+              <Menu.Item key='setting:1'>Create a post</Menu.Item>
+              <Menu.Item key='setting:2'>My profile</Menu.Item>
+              <Menu.Item onClick={logout} key='setting:3'>
+                Logout
+              </Menu.Item>
+            </SubMenu>
+          </Menu>
+        ) : (
+          <Menu theme='dark' mode='horizontal'>
+            <Menu.Item style={{ marginRight: '2rem' }}>
+              Discover
+            </Menu.Item>
+            <Menu.Item style={{ marginRight: '2rem' }}>
+              Categories
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                setShowLoginModal(true);
+              }}
+              style={{ marginRight: '2rem' }}
+            >
+              Login
+            </Menu.Item>
+            <Menu.Item
+              onClick={() => {
+                setShowRegModal(true);
+              }}
+              style={{ marginRight: '2rem' }}
+            >
+              Join
+            </Menu.Item>
+          </Menu>
+        )}
+      </div>
       <RegModal
         showRegModal={showRegModal}
         setShowRegModal={setShowRegModal}
+      />
+      <LoginModal
+        showLoginModal={showLoginModal}
+        setShowLoginModal={setShowLoginModal}
       />
     </>
   );
