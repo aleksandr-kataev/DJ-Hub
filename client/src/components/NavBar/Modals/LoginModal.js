@@ -10,10 +10,16 @@ import {
   LogModalProps,
   DefaultLogModalProps,
 } from '../../../types/index';
+import {
+  closeLoginModal,
+  switchLogToReg,
+} from '../../../actions/modalActions';
+import './Modal.css';
 
 const LoginModal = ({
+  switchLogToReg,
   showLoginModal,
-  setShowLoginModal,
+  closeLoginModal,
   error,
   login,
   clearErrors,
@@ -34,7 +40,7 @@ const LoginModal = ({
 
   const handleClose = () => {
     clearErrors();
-    setShowLoginModal(false);
+    closeLoginModal();
   };
 
   useEffect(() => {
@@ -46,10 +52,10 @@ const LoginModal = ({
 
     if (showLoginModal) {
       if (isAuthenticated) {
-        setShowLoginModal(false);
+        closeLoginModal();
       }
     }
-  }, [error, setShowLoginModal, isAuthenticated, showLoginModal]);
+  }, [error, isAuthenticated, showLoginModal]);
 
   return (
     <>
@@ -75,13 +81,22 @@ const LoginModal = ({
                 onChange={handlePasswordChange}
               />
             </Form.Group>
-            <Button
-              variant='primary'
-              type='submit'
-              onClick={handleLogin}
-            >
-              Submit
-            </Button>
+            <div className='modal__bottomRow'>
+              <Button
+                variant='dark'
+                type='submit'
+                onClick={handleLogin}
+              >
+                Login
+              </Button>
+              <Button
+                variant='light'
+                type='button'
+                onClick={switchLogToReg}
+              >
+                Sign up
+              </Button>
+            </div>
           </Form>
           <p>{errMsg}</p>
         </Modal.Body>
@@ -96,8 +111,12 @@ LoginModal.defaultProps = DefaultLogModalProps;
 const mapStateToPros = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
+  showLoginModal: state.modals.showLoginModal,
 });
 
-export default connect(mapStateToPros, { login, clearErrors })(
-  LoginModal,
-);
+export default connect(mapStateToPros, {
+  login,
+  clearErrors,
+  closeLoginModal,
+  switchLogToReg,
+})(LoginModal);

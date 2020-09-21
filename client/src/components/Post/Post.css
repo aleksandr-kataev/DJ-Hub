@@ -1,3 +1,7 @@
+button:focus {
+  outline: none;
+}
+
 .post {
   margin-top: 2rem;
   width: 100%;

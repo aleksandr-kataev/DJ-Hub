@@ -12,3 +12,7 @@
   margin-left: 8px;
   user-select: none;
 }
+
+.like:focus {
+  outline: none;
+}

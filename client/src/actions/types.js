@@ -20,3 +20,9 @@ export const LIKE_POST = 'LIKE_POST';
 export const UNLIKE_POST = 'UNLIKE_POST';
 export const COMMENT_POST = 'COMMENT_POST';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
+
+// Modals
+export const OPEN_REG_MODAL = 'OPEN_REG_MODAL';
+export const CLOSE_REG_MODAL = 'CLOSE_REG_MODAL';
+export const OPEN_LOGIN_MODAL = 'OPEN_LOGIN_MODAL';
+export const CLOSE_LOGIN_MODAL = 'CLOSE_LOGIN_MODAL';

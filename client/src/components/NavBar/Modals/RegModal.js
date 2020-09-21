@@ -7,10 +7,15 @@ import Button from 'react-bootstrap/Button';
 import { RegModalProps, DefaultRegModalProps } from '../../../types';
 import { register } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
+import {
+  closeRegModal,
+  switchRegToLog,
+} from '../../../actions/modalActions';
 
 const RegModal = ({
+  switchRegToLog,
+  closeRegModal,
   showRegModal,
-  setShowRegModal,
   clearErrors,
   isAuthenticated,
   error,
@@ -43,7 +48,7 @@ const RegModal = ({
 
   const handleClose = () => {
     clearErrors();
-    setShowRegModal(false);
+    closeRegModal();
   };
 
   useEffect(() => {
@@ -55,10 +60,10 @@ const RegModal = ({
 
     if (showRegModal) {
       if (isAuthenticated) {
-        setShowRegModal(false);
+        closeRegModal();
       }
     }
-  }, [error, setShowRegModal, isAuthenticated, showRegModal]);
+  }, [error, isAuthenticated, showRegModal]);
 
   return (
     <Modal show={showRegModal} onHide={handleClose}>
@@ -99,13 +104,22 @@ const RegModal = ({
               onChange={handleConfPassChange}
             />
           </Form.Group>
-          <Button
-            variant='primary'
-            type='submit'
-            onClick={handleRegister}
-          >
-            Submit
-          </Button>
+          <div className='modal__bottomRow'>
+            <Button
+              variant='dark'
+              type='submit'
+              onClick={handleRegister}
+            >
+              Register
+            </Button>
+            <Button
+              variant='light'
+              type='button'
+              onClick={switchRegToLog}
+            >
+              Sign up
+            </Button>
+          </div>
         </Form>
         <p>{errMsg}</p>
       </Modal.Body>
@@ -119,8 +133,12 @@ RegModal.defaultProps = DefaultRegModalProps;
 const mapStateToPros = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
   error: state.error,
+  showRegModal: state.modals.showRegModal,
 });
 
-export default connect(mapStateToPros, { register, clearErrors })(
-  RegModal,
-);
+export default connect(mapStateToPros, {
+  register,
+  clearErrors,
+  closeRegModal,
+  switchRegToLog,
+})(RegModal);

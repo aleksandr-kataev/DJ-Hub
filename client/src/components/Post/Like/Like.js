@@ -3,10 +3,12 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { HeartFill, Heart } from 'react-bootstrap-icons';
 import { likePost, unlikePost } from '../../../actions/postsActions';
+import { openLoginModal } from '../../../actions/modalActions';
 import { LikeProps, DefaultLikeProps } from '../../../types/index';
 import './Like.css';
 
 const Like = ({
+  openLoginModal,
   likePost,
   unlikePost,
   isAuthenticated,
@@ -28,7 +30,7 @@ const Like = ({
         likePost(id);
       }
     } else {
-      alert('must be logged in');
+      openLoginModal();
     }
   };
 
@@ -57,6 +59,8 @@ const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
 });
 
-export default connect(mapStateToProps, { likePost, unlikePost })(
-  Like,
-);
+export default connect(mapStateToProps, {
+  likePost,
+  unlikePost,
+  openLoginModal,
+})(Like);
