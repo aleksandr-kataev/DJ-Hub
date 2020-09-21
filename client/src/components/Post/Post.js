@@ -2,28 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
-import { useSpring, animated as a } from 'react-spring';
-
-import {
-  commentPost,
-  deleteComment,
-} from '../../actions/postsActions';
+import { Card, Tag, Row, Col } from 'antd';
+import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { PostProps, DefaultPostProps } from '../../types/index';
-import {
-  PostStyled,
-  Container,
-  Left,
-  PlayerStyled,
-  InteractionStyled,
-  AddCommentStyled,
-} from './PostStyles';
-import Like from './Like';
-import CommentIcon from './CommentIcon';
-import Comment from './Comment';
-import PostDate from './PostDate';
+import './Post.css';
 
 // eslint-disable-next-line no-shadow
-const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
+const Post = ({ post, likedPosts, isAuthenticated }) => {
   const {
     id,
     username,
@@ -35,38 +20,29 @@ const Post = ({ post, likedPosts, commentPost, isAuthenticated }) => {
     tag,
   } = post;
 
-  const [addComment, addSetComment] = useState('');
-
-  const [openComments, setOpenComments] = useState(false);
-  const [commentHeight, setCommentHeight] = useState(0);
-
-  // react-spring props
-  const props = useSpring({ opacity: 1, from: { opacity: 0 } });
-  const commentsProps = useSpring({
-    height: openComments ? `${commentHeight + 15}px` : '0px',
-  });
-
-  const handleOpenComments = () => {
-    setOpenComments(!openComments);
-  };
-
-  const handleChangeUsername = (e) => addSetComment(e.target.value);
-  const handleAddComment = () => {
-    if (!isAuthenticated) {
-      alert('not logged in');
-      return;
-    }
-
-    if (addComment === '') {
-      alert('cant have empty comment ');
-      return;
-    }
-
-    commentPost(id, addComment);
-    addSetComment('');
-  };
-
-  return null;
+  return (
+    <Card
+      title={title}
+      extra={<Tag color='magenta'>{tag}</Tag>}
+      style={{ marginTop: '2rem' }}
+    >
+      <p>{username}</p>
+      <ReactPlayer url={link} width='100%' height='130px' />
+      <Row style={{ marginTop: '1%' }}>
+        <Col span={12}>
+          <HeartFilled
+            style={{ fontSize: '20px', color: '#d43008' }}
+          />
+          <span style={{ fontSize: '18px', marginLeft: '3px' }}>
+            {numOfLikes}
+          </span>
+        </Col>
+        <Col span={12}>
+          <p style={{ textAlign: 'right' }}>{date}</p>
+        </Col>
+      </Row>
+    </Card>
+  );
 };
 
 const mapStateToProps = (state) => ({
@@ -78,4 +54,4 @@ const mapStateToProps = (state) => ({
 Post.propTypes = PostProps;
 Post.defaultProps = DefaultPostProps;
 
-export default connect(mapStateToProps, { commentPost })(Post);
+export default connect(mapStateToProps, {})(Post);

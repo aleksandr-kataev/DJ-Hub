@@ -1,7 +1,9 @@
 /* eslint-disable no-shadow */
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Modal } from 'antd';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import { login } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
 import {
@@ -17,21 +19,20 @@ const LoginModal = ({
   clearErrors,
   isAuthenticated,
 }) => {
-  const [form] = Form.useForm();
   const [errMsg, setErrMsg] = useState(null);
-  // const [disabled, setDisabled] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-  const onOk = () => {
-    form.validateFields().then(async (values) => {
-      login({
-        username: values.username,
-        password: values.password,
-      });
-    });
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const user = { username, password };
+    login(user);
   };
 
-  const onCancel = () => {
-    form.resetFields();
+  const handleClose = () => {
     clearErrors();
     setShowLoginModal(false);
   };
@@ -52,42 +53,38 @@ const LoginModal = ({
 
   return (
     <>
-      <Modal
-        title='Login'
-        visible={showLoginModal}
-        onOk={onOk}
-        onCancel={onCancel}
-        okText='Login'
-        cancelButtonProps={{ style: { display: 'none' } }}
-      >
-        <Form name='login' form={form}>
-          <Form.Item
-            label='Username'
-            name='username'
-            rules={[
-              {
-                required: true,
-                message: 'Please input your username!',
-              },
-            ]}
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item
-            label='Password'
-            name='password'
-            rules={[
-              {
-                required: true,
-                message: 'Please input your password!',
-              },
-            ]}
-          >
-            <Input.Password />
-          </Form.Item>
-          <span style={{ text: 'black' }}>{errMsg}</span>
-        </Form>
+      <Modal show={showLoginModal} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Login</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId='loginUsername'>
+              <Form.Label>Username</Form.Label>
+              <Form.Control
+                type='username'
+                placeholder='Username'
+                onChange={handleUsernameChange}
+              />
+            </Form.Group>
+            <Form.Group controlId='loginPassword'>
+              <Form.Label>Password</Form.Label>
+              <Form.Control
+                type='password'
+                placeholder='Password'
+                onChange={handlePasswordChange}
+              />
+            </Form.Group>
+            <Button
+              variant='primary'
+              type='submit'
+              onClick={handleLogin}
+            >
+              Submit
+            </Button>
+          </Form>
+          <p>{errMsg}</p>
+        </Modal.Body>
       </Modal>
     </>
   );

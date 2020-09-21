@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,7 +8,13 @@ import {
 import { Provider } from 'react-redux';
 import store from './store';
 import { loadUser } from './actions/authActions';
-import { Discover, About, CreatePost, Home } from './components';
+import {
+  Discover,
+  About,
+  CreatePost,
+  Home,
+  NavBar,
+} from './components';
 import 'antd/dist/antd.css';
 
 const App = () => {
@@ -19,6 +26,7 @@ const App = () => {
     <Provider store={store}>
       <Router>
         <Switch>
+          <NavBar />
           <Route exact path='/discover' component={Discover} />
           <Route exact path='/about' component={About} />
           <Route exact path='/create-post' component={CreatePost} />

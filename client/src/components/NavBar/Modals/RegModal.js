@@ -1,7 +1,9 @@
 /* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { Form, Input, Modal } from 'antd';
+import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import { RegModalProps, DefaultRegModalProps } from '../../../types';
 import { register } from '../../../actions/authActions';
 import { clearErrors } from '../../../actions/errorActions';
@@ -14,29 +16,38 @@ const RegModal = ({
   error,
   register,
 }) => {
-  const [form] = Form.useForm();
   const [errMsg, setErrMsg] = useState(null);
-  // const [disabled, setDisabled] = useState(false);
+  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confpass, setConfPass] = useState('');
 
-  const onOk = () => {
-    form.validateFields().then(async (values) => {
-      register({
-        username: values.username,
-        email: values.email,
-        password: values.password,
-      });
-      form.resetFields();
-    });
+  const handleEmailChange = (e) => setEmail(e.target.value);
+  const handleUsernameChange = (e) => setUsername(e.target.value);
+  const handlePasswordChange = (e) => setPassword(e.target.value);
+  const handleConfPassChange = (e) => setConfPass(e.target.value);
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    if (password !== confpass) {
+      setErrMsg('Password do not match');
+      return;
+    }
+    const newUser = {
+      username,
+      email,
+      password,
+    };
+    register(newUser);
   };
 
-  const onCancel = () => {
-    form.resetFields();
+  const handleClose = () => {
     clearErrors();
     setShowRegModal(false);
   };
 
   useEffect(() => {
-    if (error.id === 'LOGIN_FAIL') {
+    if (error.id === 'REGISTER_FAIL') {
       setErrMsg(error.msg.msg);
     } else {
       setErrMsg(null);
@@ -50,67 +61,54 @@ const RegModal = ({
   }, [error, setShowRegModal, isAuthenticated, showRegModal]);
 
   return (
-    <Modal
-      title='Register'
-      visible={showRegModal}
-      onOk={onOk}
-      onCancel={onCancel}
-      okText='Login'
-      cancelButtonProps={{ style: { display: 'none' } }}
-    >
-      <Form name='Register' form={form}>
-        <Form.Item
-          label='Email'
-          name='email'
-          rules={[
-            {
-              required: true,
-              message: 'Please enter your email',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label='Username'
-          name='username'
-          rules={[
-            {
-              required: true,
-              message: 'Please enter your username',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label='Password'
-          name='password'
-          rules={[
-            {
-              required: true,
-              message: 'Please enter your password',
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-
-        <Form.Item
-          label='Confirm password'
-          name='confpassword'
-          rules={[
-            {
-              required: true,
-              message: 'Please enter your password confirmation',
-            },
-          ]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <span style={{ text: 'black' }}>{errMsg}</span>
-      </Form>
+    <Modal show={showRegModal} onHide={handleClose}>
+      <Modal.Header closeButton>
+        <Modal.Title>Register</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Form>
+          <Form.Group controlId='registerEmail'>
+            <Form.Label>Email</Form.Label>
+            <Form.Control
+              type='email'
+              placeholder='Email'
+              onChange={handleEmailChange}
+            />
+          </Form.Group>
+          <Form.Group controlId='registerUsername'>
+            <Form.Label>Username</Form.Label>
+            <Form.Control
+              type='username'
+              placeholder='Username'
+              onChange={handleUsernameChange}
+            />
+          </Form.Group>
+          <Form.Group controlId='registerPassword'>
+            <Form.Label>Password</Form.Label>
+            <Form.Control
+              type='password'
+              placeholder='Password'
+              onChange={handlePasswordChange}
+            />
+          </Form.Group>
+          <Form.Group controlId='registerConfPass'>
+            <Form.Label>Confirm password</Form.Label>
+            <Form.Control
+              type='password'
+              placeholder='Confirm password'
+              onChange={handleConfPassChange}
+            />
+          </Form.Group>
+          <Button
+            variant='primary'
+            type='submit'
+            onClick={handleRegister}
+          >
+            Submit
+          </Button>
+        </Form>
+        <p>{errMsg}</p>
+      </Modal.Body>
     </Modal>
   );
 };

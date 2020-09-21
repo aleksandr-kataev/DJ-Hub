@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import './Discover.css';
 
 import {
   DiscoverProps,
@@ -20,7 +21,7 @@ const Discover = ({ getPosts, posts }) => {
   }
 
   return (
-    <div className='discover'>
+    <div className='posts'>
       {posts.posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}

@@ -1,18 +1,5 @@
-import React from 'react';
-import { Layout } from 'antd';
-import NavBar from '../NavBar/NavBar';
+// import React from 'react';
 
-const Home = () => {
-  const { Header, Footer, Content } = Layout;
-  return (
-    <Layout>
-      <Header>
-        <NavBar />
-      </Header>
-      <Content>Content</Content>
-      <Footer>Footer</Footer>
-    </Layout>
-  );
-};
+const Home = () => null;
 
 export default Home;
