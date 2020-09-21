@@ -2,9 +2,17 @@
 import React, { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 import { connect } from 'react-redux';
-import { Card, Tag, Row, Col } from 'antd';
-import { HeartOutlined, HeartFilled } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
+
+import Card from 'react-bootstrap/Card';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+import PostDate from './PostDate';
 import { PostProps, DefaultPostProps } from '../../types/index';
+import Like from './Like/Like';
+import Comment from './Comment/Comment';
 import './Post.css';
 
 // eslint-disable-next-line no-shadow
@@ -20,27 +28,51 @@ const Post = ({ post, likedPosts, isAuthenticated }) => {
     tag,
   } = post;
 
+  const history = useHistory();
+
+  const handleUserRedirect = () => {
+    history.push(`./users/${username}`);
+  };
+
   return (
-    <Card
-      title={title}
-      extra={<Tag color='magenta'>{tag}</Tag>}
-      style={{ marginTop: '2rem' }}
-    >
-      <p>{username}</p>
-      <ReactPlayer url={link} width='100%' height='130px' />
-      <Row style={{ marginTop: '1%' }}>
-        <Col span={12}>
-          <HeartFilled
-            style={{ fontSize: '20px', color: '#d43008' }}
-          />
-          <span style={{ fontSize: '18px', marginLeft: '3px' }}>
-            {numOfLikes}
-          </span>
-        </Col>
-        <Col span={12}>
-          <p style={{ textAlign: 'right' }}>{date}</p>
-        </Col>
-      </Row>
+    <Card className='post'>
+      <Card.Body>
+        <Container>
+          <Row className='post__row'>
+            <Col className='post__title'>
+              <span>{title}</span>
+            </Col>
+            <Col className='post__rightAlign'>
+              <span>{`#${tag}`}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col className='post__username'>
+              <button onClick={handleUserRedirect} type='button'>
+                {username}
+              </button>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <ReactPlayer url={link} width='100%' height='130px' />
+            </Col>
+          </Row>
+          <Row className='post__row bottomRow'>
+            <Col className='post__interactions'>
+              <Like
+                numOfLikes={numOfLikes}
+                id={id}
+                liked={likedPosts.includes(id)}
+              />
+              <Comment id={id} numOfComments={comments.length} />
+            </Col>
+            <Col className='post__rightAlign'>
+              <PostDate datePosted={date} />
+            </Col>
+          </Row>
+        </Container>
+      </Card.Body>
     </Card>
   );
 };

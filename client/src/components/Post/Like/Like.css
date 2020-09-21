@@ -1,0 +1,14 @@
+.like {
+  display: flex;
+  align-items: center;
+}
+.like:hover {
+  cursor: pointer;
+  opacity: 70%;
+}
+
+.like__count {
+  font-size: 16px;
+  margin-left: 8px;
+  user-select: none;
+}

@@ -11,6 +11,7 @@ import { NavBarProps, DefaultNavBarProps } from '../../types/index';
 import LoginModal from './Modals/LoginModal';
 import RegModal from './Modals/RegModal';
 import './NavBar.css';
+// user-select: none;
 
 const NavBar = ({ auth, logout }) => {
   const [showLoginModal, setShowLoginModal] = useState(false);

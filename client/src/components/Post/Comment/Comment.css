@@ -1,0 +1,15 @@
+.comment {
+  display: flex;
+  align-items: center;
+  margin-left: 2rem;
+}
+.comment:hover {
+  cursor: pointer;
+  opacity: 70%;
+}
+
+.comment__count {
+  font-size: 16px;
+  margin-left: 8px;
+  user-select: none;
+}

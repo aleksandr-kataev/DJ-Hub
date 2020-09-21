@@ -25,8 +25,8 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router>
+        <NavBar />
         <Switch>
-          <NavBar />
           <Route exact path='/discover' component={Discover} />
           <Route exact path='/about' component={About} />
           <Route exact path='/create-post' component={CreatePost} />

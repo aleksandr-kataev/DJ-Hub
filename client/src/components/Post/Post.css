@@ -1,4 +1,39 @@
-.post__likeIcon {
+.post {
+  margin-top: 2rem;
+  width: 100%;
+  box-shadow: 0px 3px 5px #aaaaaa;
+}
+
+.post__title {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.post__tag {
+  text-align: right;
   font-size: 16px;
-  color: #d43008;
+}
+
+.post__username {
+  margin-bottom: 0.5rem;
+  opacity: 80%;
+}
+
+.post__row {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.post__interactions {
+  display: flex;
+}
+
+.post__rightAlign {
+  font-size: 16px;
+  text-align: right;
+}
+
+.bottomRow {
+  margin-top: 1rem;
 }
