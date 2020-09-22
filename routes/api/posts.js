@@ -11,7 +11,10 @@ const User = require('../../models/User');
 
 const getPostsController = async (req, res) => {
   try {
-    const posts = await Post.find({}, { _id: false }).sort({
+    const posts = await Post.find(
+      {},
+      { _id: false, comments: false },
+    ).sort({
       date: -1,
     });
     if (!posts) throw new HTTPError('.find()_failed', 500);
@@ -263,12 +266,14 @@ const commentController = async (req, res) => {
         $push: {
           comments: commentObj,
         },
+        $inc: { numofComments: 1 },
       },
       { new: true },
     );
     if (!post) {
       throw new HTTPError('post_not_updated', 500);
     }
+
     return res.status(200).json({ comment: commentObj, postID });
   } catch (err) {
     if (!err.code) return err;
@@ -292,6 +297,7 @@ const delCommentController = async (req, res) => {
         $pull: {
           comments: { id: commentID },
         },
+        $inc: { numofComments: -1 },
       },
       { new: true },
     );
