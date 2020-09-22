@@ -13,9 +13,9 @@ import {
 } from './types';
 
 // Load user
-const loadUser = () => async (dispach, getState) => {
+const loadUser = () => async (dispatch, getState) => {
   // User loading
-  dispach({ type: USER_LOADING });
+  dispatch({ type: USER_LOADING });
   try {
     const res = await axios.get(
       // dev http://localhost:5000/api/user
@@ -24,18 +24,18 @@ const loadUser = () => async (dispach, getState) => {
       tokenConfig(getState),
     );
     if (!res) throw new Error();
-    dispach({
+    dispatch({
       type: USER_LOADED,
       payload: res.data,
     });
   } catch (e) {
-    dispach(returnErrors(e.response.data, e.response.status));
-    dispach({ type: AUTH_ERROR });
+    dispatch(returnErrors(e.response.data, e.response.status));
+    dispatch({ type: AUTH_ERROR });
   }
 };
 // Register user
 const register = ({ username, email, password }) => async (
-  dispach,
+  dispatch,
 ) => {
   // Headers
   const config = {
@@ -55,25 +55,25 @@ const register = ({ username, email, password }) => async (
     );
 
     if (!res) throw new Error();
-    dispach({
+    dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
     });
   } catch (e) {
-    dispach(
+    dispatch(
       returnErrors(
         e.response.data,
         e.response.status,
         'REGISTER_FAIL',
       ),
     );
-    dispach({
+    dispatch({
       type: REGISTER_FAIL,
     });
   }
 };
 
-const login = ({ username, password }) => async (dispach) => {
+const login = ({ username, password }) => async (dispatch) => {
   // Headers
   const config = {
     headers: {
@@ -92,15 +92,15 @@ const login = ({ username, password }) => async (dispach) => {
     );
 
     if (!res) throw new Error();
-    dispach({
+    dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
     });
   } catch (e) {
-    dispach(
+    dispatch(
       returnErrors(e.response.data, e.response.status, 'LOGIN_FAIL'),
     );
-    dispach({
+    dispatch({
       type: LOGIN_FAIL,
     });
   }
