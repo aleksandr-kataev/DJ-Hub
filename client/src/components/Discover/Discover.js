@@ -7,7 +7,7 @@ import {
   DefaultDiscoverProps,
 } from '../../types/index';
 
-import Post from '../Post';
+import PostCard from '../PostCard';
 import { getPosts } from '../../actions/postsActions';
 
 // eslint-disable-next-line no-shadow
@@ -24,7 +24,7 @@ const Discover = ({ getPosts, posts }) => {
     <>
       <div className='posts'>
         {posts.posts.map((post) => (
-          <Post key={post.id} post={post} />
+          <PostCard key={post.id} post={post} />
         ))}
       </div>
     </>

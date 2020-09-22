@@ -2,12 +2,14 @@ import React from 'react';
 import { Chat } from 'react-bootstrap-icons';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import './Comment.css';
+import './CommentIcon.css';
 
-const Comment = ({ id, numOfComments }) => {
+const CommentIcon = ({ id, numOfComments, redirect }) => {
   const history = useHistory();
   const handlePostRedirect = () => {
-    history.push(`./posts/${id}`);
+    if (redirect) {
+      history.push(`./posts/${id}`);
+    }
   };
 
   return (
@@ -24,9 +26,9 @@ const Comment = ({ id, numOfComments }) => {
   );
 };
 
-Comment.propTypes = {
+CommentIcon.propTypes = {
   numOfComments: PropTypes.number.isRequired,
   id: PropTypes.string.isRequired,
 };
 
-export default Comment;
+export default CommentIcon;

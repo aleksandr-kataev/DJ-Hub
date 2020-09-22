@@ -2,12 +2,15 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { HeartFill, Heart } from 'react-bootstrap-icons';
-import { likePost, unlikePost } from '../../../actions/postsActions';
-import { openLoginModal } from '../../../actions/modalActions';
-import { LikeProps, DefaultLikeProps } from '../../../types/index';
-import './Like.css';
+import { likePost, unlikePost } from '../../actions/postsActions';
+import { openLoginModal } from '../../actions/modalActions';
+import {
+  LikeIconProps,
+  DefaultLikeIconProps,
+} from '../../types/index';
+import './LikeIcon.css';
 
-const Like = ({
+const LikeIcon = ({
   openLoginModal,
   likePost,
   unlikePost,
@@ -52,8 +55,8 @@ const Like = ({
   );
 };
 
-Like.propTypes = LikeProps;
-Like.defaultProps = DefaultLikeProps;
+LikeIcon.propTypes = LikeIconProps;
+LikeIcon.defaultProps = DefaultLikeIconProps;
 
 const mapStateToProps = (state) => ({
   isAuthenticated: state.auth.isAuthenticated,
@@ -63,4 +66,4 @@ export default connect(mapStateToProps, {
   likePost,
   unlikePost,
   openLoginModal,
-})(Like);
+})(LikeIcon);

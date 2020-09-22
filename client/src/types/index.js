@@ -34,7 +34,8 @@ export const DefaultNavBarProps = {
 
 export const LogModalProps = {
   showLogModal: bool.isRequired,
-  setShowLogModal: func.isRequired,
+  closeLoginModal: func.isRequired,
+  switchLogToReg: func.isRequired,
   isAuthenticated: bool,
   login: func.isRequired,
   clearErrors: func.isRequired,
@@ -54,7 +55,8 @@ export const DefaultLogModalProps = {
 
 export const RegModalProps = {
   showRegModal: bool.isRequired,
-  setShowRegModal: func.isRequired,
+  switchRegToLog: func.isRequired,
+  closeRegModal: func.isRequired,
   isAuthenticated: bool,
   register: func.isRequired,
   clearErrors: func.isRequired,
@@ -105,7 +107,7 @@ export const DefaultDiscoverProps = {
   }),
 };
 
-export const PostProps = {
+export const PostCardProps = {
   post: shape({
     id: string,
     date: string,
@@ -126,12 +128,12 @@ export const PostProps = {
   likedPosts: arrayOf(string),
 };
 
-export const DefaultPostProps = {
+export const DefaultPostCardProps = {
   post: {},
   likedPosts: [],
 };
 
-export const LikeProps = {
+export const LikeIconProps = {
   numOfLikes: number.isRequired,
   liked: bool.isRequired,
   id: string.isRequired,
@@ -139,7 +141,7 @@ export const LikeProps = {
   isAuthenticated: bool,
 };
 
-export const DefaultLikeProps = {
+export const DefaultLikeIconProps = {
   unlikePost: null,
   isAuthenticated: null,
 };
@@ -147,9 +149,10 @@ export const DefaultLikeProps = {
 export const CommentIconProps = {
   handleOpenComments: func.isRequired,
   commentCount: number.isRequired,
+  redirect: bool.isRequired,
 };
 
-export const PostDateProps = {
+export const DateProps = {
   datePosted: string.isRequired,
 };
 

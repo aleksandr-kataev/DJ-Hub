@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { PostDateProps } from '../../types/index';
-import dateDiff from './helper';
+import { DateProps } from '../../types/index';
+import dateDiff from './DateDiff';
 
-const PostDate = (props) => {
-  const { datePosted } = props;
-
+const Date = ({ datePosted }) => {
   const [date, setDate] = useState(dateDiff(datePosted));
-
   useEffect(() => {
     const check = setInterval(() => {
       setDate(dateDiff(datePosted));
@@ -17,6 +14,6 @@ const PostDate = (props) => {
   return <span>{date}</span>;
 };
 
-PostDate.propTypes = PostDateProps;
+Date.propTypes = DateProps;
 
-export default PostDate;
+export default Date;

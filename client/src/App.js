@@ -14,6 +14,7 @@ import {
   CreatePost,
   Home,
   NavBar,
+  Post,
 } from './components';
 import 'antd/dist/antd.css';
 
@@ -27,6 +28,7 @@ const App = () => {
       <Router>
         <NavBar />
         <Switch>
+          <Route exact path='/post/:id' component={Post} />
           <Route exact path='/discover' component={Discover} />
           <Route exact path='/about' component={About} />
           <Route exact path='/create-post' component={CreatePost} />

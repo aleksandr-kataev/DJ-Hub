@@ -55,7 +55,7 @@ const LoginModal = ({
         closeLoginModal();
       }
     }
-  }, [error, isAuthenticated, showLoginModal]);
+  }, [error, closeLoginModal, isAuthenticated, showLoginModal]);
 
   return (
     <>

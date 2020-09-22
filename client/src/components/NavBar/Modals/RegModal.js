@@ -12,6 +12,8 @@ import {
   switchRegToLog,
 } from '../../../actions/modalActions';
 
+// Add modal actions and states to prop validation + logmodal
+
 const RegModal = ({
   switchRegToLog,
   closeRegModal,
@@ -63,7 +65,7 @@ const RegModal = ({
         closeRegModal();
       }
     }
-  }, [error, isAuthenticated, showRegModal]);
+  }, [error, closeRegModal, isAuthenticated, showRegModal]);
 
   return (
     <Modal show={showRegModal} onHide={handleClose}>
