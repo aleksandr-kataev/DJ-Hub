@@ -30,6 +30,10 @@ const PostSchema = new Schema({
     type: Array,
     default: [Comment],
   },
+  numofComments: {
+    type: Number,
+    default: 0,
+  },
   link: {
     type: String,
     required: true,
