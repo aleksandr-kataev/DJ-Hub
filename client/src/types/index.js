@@ -162,5 +162,36 @@ export const CommentProps = {
     commentID: string.isRequired,
     date: string.isRequired,
     username: string.isRequired,
+  }).isRequired,
+};
+
+export const PostProps = {
+  post: shape({
+    isLoading: bool,
+    post: shape({
+      id: string,
+      date: string,
+      numOfLikes: number,
+      comments: arrayOf(
+        shape({
+          commentID: string,
+          comment: string,
+          date: string,
+          username: string,
+        }),
+      ),
+      title: string,
+      userID: string,
+      link: string,
+      tag: string,
+    }),
   }),
+
+  likedPosts: arrayOf(string),
+  getPost: func.isRequired,
+};
+
+export const DefaultPostProps = {
+  post: { post: null, isLoading: false },
+  likedPosts: null,
 };

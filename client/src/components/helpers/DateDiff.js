@@ -36,7 +36,7 @@ export default (postDate) => {
     return `${diff} days ago`;
   }
   // Return diff in months
-  const diff = dateObj.getMonth() - new Date().getMonth();
+  const diff = new Date().getMonth() - dateObj.getMonth();
   if (diff === 1) {
     return '1 month ago';
   }

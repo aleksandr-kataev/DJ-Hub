@@ -11,7 +11,6 @@ export const GET_ERRORS = 'GET_ERRORS';
 export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 
 // Posts
-export const GET_POSTS = 'GET_POSTS';
 export const ADD_POST = 'ADD_POST';
 export const DELETE_POST = 'DELETE_POST';
 export const POSTS_LOADING = 'POSTS_LOADING';
@@ -26,3 +25,7 @@ export const OPEN_REG_MODAL = 'OPEN_REG_MODAL';
 export const CLOSE_REG_MODAL = 'CLOSE_REG_MODAL';
 export const OPEN_LOGIN_MODAL = 'OPEN_LOGIN_MODAL';
 export const CLOSE_LOGIN_MODAL = 'CLOSE_LOGIN_MODAL';
+
+// Post
+export const POST_LOADING = 'POST_LOADING';
+export const POST_LOADED = 'POST_LOADED';

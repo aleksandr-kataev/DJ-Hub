@@ -25,6 +25,18 @@ const getPostsController = async (req, res) => {
   }
 };
 
+const getPostController = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await Post.find({ id }, { _id: false });
+    if (!post) throw new HTTPError('.find()_failed', 500);
+    return res.json(post);
+  } catch (err) {
+    if (!err.code) return err;
+    return res.status(err.code).json({ msg: err.message });
+  }
+};
+
 const getUsersPostsController = async (req, res) => {
   const { username } = req.params;
 
@@ -313,9 +325,14 @@ const delCommentController = async (req, res) => {
 };
 
 // @route   GET api/posts
-// @desc    Get all postss
+// @desc    Get all posts
 // @access  Public
 router.get('/', getPostsController);
+
+// @route   GET api/posts/:id
+// @desc    Get post based on id
+// @access  Public
+router.get('/:id', getPostController);
 
 // @route   GET api/posts/:username
 // @desc    Get users posts

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import './Discover.css';
 
@@ -11,11 +11,7 @@ import PostCard from '../PostCard';
 import { getPosts } from '../../actions/postsActions';
 
 // eslint-disable-next-line no-shadow
-const Discover = ({ getPosts, posts }) => {
-  useEffect(() => {
-    getPosts();
-  }, [getPosts]);
-
+const Discover = ({ posts }) => {
   if (posts.isLoading) {
     return <>Loading</>;
   }

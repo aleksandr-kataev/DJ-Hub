@@ -15,7 +15,7 @@ import {
   DefaultPostCardProps,
 } from '../../types/index';
 import Like from '../LikeIcon/LikeIcon';
-import Comment from '../CommentIcon/Comment';
+import Comment from '../CommentIcon/CommentIcon';
 import './PostCard.css';
 
 // eslint-disable-next-line no-shadow
@@ -26,7 +26,7 @@ const PostCard = ({ post, likedPosts }) => {
     title,
     date,
     numOfLikes,
-    comments,
+    numOfComments,
     link,
     tag,
   } = post;
@@ -38,19 +38,19 @@ const PostCard = ({ post, likedPosts }) => {
   };
 
   return (
-    <Card className='post'>
+    <Card className='postCard'>
       <Card.Body>
         <Container>
-          <Row className='post__row'>
-            <Col className='post__title'>
+          <Row className='postCard__row'>
+            <Col className='postCard__title'>
               <span>{title}</span>
             </Col>
-            <Col className='post__rightAlign'>
+            <Col className='postCard__rightAlign'>
               <span>{`#${tag}`}</span>
             </Col>
           </Row>
           <Row>
-            <Col className='post__username'>
+            <Col className='postCard__username'>
               <button onClick={handleUserRedirect} type='button'>
                 {username}
               </button>
@@ -61,8 +61,8 @@ const PostCard = ({ post, likedPosts }) => {
               <ReactPlayer url={link} width='100%' height='130px' />
             </Col>
           </Row>
-          <Row className='post__row bottomRow'>
-            <Col className='post__interactions'>
+          <Row className='postCard__row postCard__bottomRow'>
+            <Col className='postCard__interactions'>
               <Like
                 numOfLikes={numOfLikes}
                 id={id}
@@ -70,11 +70,11 @@ const PostCard = ({ post, likedPosts }) => {
               />
               <Comment
                 id={id}
-                numOfComments={comments.length}
+                numOfComments={numOfComments}
                 redirect
               />
             </Col>
-            <Col className='post__rightAlign'>
+            <Col className='postCard__rightAlign'>
               <Date datePosted={date} />
             </Col>
           </Row>

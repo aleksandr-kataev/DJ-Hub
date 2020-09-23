@@ -1,19 +1,19 @@
-.comment {
+.commentIcon {
   display: flex;
   align-items: center;
   margin-left: 2rem;
 }
-.comment:hover {
+.commentIcon:hover {
   cursor: pointer;
   opacity: 70%;
 }
 
-.comment__count {
+.commentIcon__count {
   font-size: 16px;
   margin-left: 8px;
   user-select: none;
 }
 
-.comment:focus {
+.commentIcon:focus {
   outline: none;
 }
